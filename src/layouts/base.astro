@@ -1,5 +1,5 @@
 ---
-const { title:string } = Astro.props;
+import "@styles/global.css";
 ---
 
 <html lang="en">
@@ -11,7 +11,7 @@ const { title:string } = Astro.props;
 		<meta name="generator" content={Astro.generator} />
 		<title></title>
 	</head>
-	<body>
+	<body class="bg-black text-white">
 		<slot></slot>
 	</body>
 </html>

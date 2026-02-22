@@ -1,17 +1,18 @@
 ---
 import { database } from "@lib/database";
 import Layout from "@layouts/base.astro";
+import what from "@components/apodCard.astro";
 
-const { year, month, day } = Astro.params;
+const today = new Date();
+const year = today.getFullYear();
+const month = String(today.getMonth() + 1).padStart(2, "0");
+const day = String(today.getDate()).padStart(2, "0");
 
 const { data, error } = await database
   .from("APODs")
   .select()
   .eq("date", `${year}-${month}-${day}`);
 const Apod = data?.[0];
-if (!Apod) {
-  return Astro.redirect("/")
-}
 ---
 
 <Layout>
@@ -51,13 +52,10 @@ if (!Apod) {
       >
       </div>
       <article
-        class="max-w-[68ch] md:max-w-5/7 md:text-lg leading-relaxed text-zinc-400 opacity-0 animate-[fadeUp_0.8s_ease-out_0.45s_forwards]"
+        class="max-w-[68ch] md:text-lg leading-relaxed text-zinc-400 opacity-0 animate-[fadeUp_0.8s_ease-out_0.45s_forwards]"
       >
-        <p class="text-justify md:text-left">
+        <p class="text-justify mb-10 md:text-left">
           {Apod?.explanation}
-        </p>
-        <p class="text-shadow-zinc-500 mt-2 text-center">
-          &copy; {Apod?.copyright || "NASA"}
         </p>
       </article>
     </div>
