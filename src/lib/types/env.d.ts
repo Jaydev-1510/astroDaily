@@ -6,7 +6,6 @@ dotenv.config();
 
 const ENVSchema = z.object({
   NASA_API_URL: z.string(),
-  NASA_API_KEY: z.string(),
   SUPABASE_URL: z.string().url(),
   SUPABASE_KEY: z.string(),
 });
