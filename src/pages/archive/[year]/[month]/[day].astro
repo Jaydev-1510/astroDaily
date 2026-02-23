@@ -21,8 +21,10 @@ Astro.response.headers.set(
   "Cache-Control",
   "public, s-maxage=31536000, stale-while-revalidate",
 );
+
+const ogImage = `https://astro--daily.vercel.app/og/${year}/${month}/${day}.png`;
 ---
 
-<Layout>
+<Layout ogImage={ogImage}>
   <ApodCard Apod={data} />
 </Layout>
