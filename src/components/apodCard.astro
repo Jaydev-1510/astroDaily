@@ -12,7 +12,7 @@ const { data: anniversaries } = await database.rpc("get_apods_by_date", {
   d: day,
 });
 
-anniversaries?.pop()
+anniversaries?.pop();
 ---
 
 <main class="relative min-h-screen bg-black text-zinc-300">
@@ -27,7 +27,7 @@ anniversaries?.pop()
     </div>
   </div>
 
-  <div class="relative max-w-7xl mx-auto px-6 pt-32 pb-24">
+  <div class="relative max-w-7xl mx-auto px-6 pb-24">
     <div class="flex flex-col items-center">
       <header
         class="flex flex-col items-center mb-12 animate-in fade-in slide-in-from-bottom-4 duration-1000"
@@ -75,7 +75,9 @@ anniversaries?.pop()
             &copy; {Apod?.copyright || "NASA"}
           </p>
           <a
-          href={Apod?.hdurl}
+            href={Apod?.hdurl}
+            download={Apod?.title}
+            target="_blank"
             class="text-[10px] tracking-widest uppercase text-white/50 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10"
           >
             <svg
