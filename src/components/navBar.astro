@@ -1,5 +1,17 @@
 ---
+import { database } from "@lib/database";
 
+const { data } = await database
+  .from("APODs")
+  .select("date")
+  .order("date", { ascending: false })
+  .limit(1);
+
+const lastDate = data?.[0].date;
+const latestApod = await fetch(
+  "https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY",
+).then((r) => r.json());
+const latestDate: string = latestApod.date;
 ---
 
 <nav
@@ -59,7 +71,7 @@
       <span
         class="text-[10px] font-mono text-zinc-400/80 bg-zinc-500/10 px-2 py-1 rounded-4xl border border-zinc-500/20"
       >
-        LIVE_DATA
+        {lastDate === latestDate ? "LIVE_DATA" : "OLD_DATA"}
       </span>
     </div>
   </div>
