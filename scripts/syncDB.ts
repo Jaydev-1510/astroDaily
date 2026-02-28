@@ -5,8 +5,10 @@ function formatDate(date: Date): string {
   return date.toISOString().split("T")[0];
 }
 
-const today: string = formatDate(new Date());
 const API_URL: string = config.NASA_API_URL;
+
+const latestApod: APISchema = await fetch(API_URL).then((r) => r.json());
+const today: string = latestApod.date;
 
 async function fetchApods(
   chunkMap: { startDate: string; endDate: string }[],
@@ -111,7 +113,7 @@ async function syncDatabase() {
       addDays(lastDate, 1),
     );
     const newApods: APISchema[] = await fetchApods(fetchMap);
-    const { error } = await database.from("APODs").insert(newApods);
+    const { error } = await database.from("APODs").upsert(newApods);
     if (error === null) {
       console.log("✓ Database synced.");
     } else {
