@@ -1,18 +1,21 @@
 ---
 import Layout from "@layouts/base.astro";
 import { database } from "@lib/database";
-import { Image } from "astro:assets";
 
-const { data: galleryItems } = await database
+const { data: rawItems } = await database
   .from("APODs")
   .select("date, title, url, hdurl")
   .order("date", { ascending: false })
-  .limit(100);
+  .limit(40);
+
+const initialItems = rawItems
+  ?.filter((item) => /\.(jpg|jpeg|png|webp|gif|avif)$/i.test(item.url))
+  .slice(0, 20);
 ---
 
 <Layout title="Cosmic Gallery | astroDaily">
   <main class="pt-32 pb-20 px-4 md:px-8 max-w-400 mx-auto">
-    <header class="mb-10 text-center">
+    <header class="mb-20 text-center">
       <h1
         class="font-sans font-bold text-9xl md:text-[12rem] tracking-tighter absolute left-1/2 -translate-x-1/2 top-20 select-none text-center bg-linear-0 from-black to-zinc-500 text-transparent bg-clip-text duration-700 hover:to-zinc-200 transition-colors"
       >
@@ -26,60 +29,193 @@ const { data: galleryItems } = await database
     </header>
 
     <div
-      class="columns-1 md:columns-2 lg:columns-3 xl:columns-4 gap-6 space-y-6 px-10"
+      id="gallery-grid"
+      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 px-10 items-start"
     >
-      {
-        galleryItems?.map((item) => (
-          <div class="relative group break-inside-avoid rounded-3xl border border-white/10 bg-white/5 overflow-hidden transition-all duration-500 hover:border-white/20 hover:shadow-[0_0_80px_rgba(99,102,241,0.1)]">
-            <div class="absolute inset-0 animate-shimmer z-0" />
-            <Image
-              src={item.url || ""}
-              width={800}
-              height={1000}
-              alt={item.title}
-              class="w-full h-auto object-cover transition-all duration-1000 ease-out group-hover:scale-105 opacity-0 z-10"
-              onload="this.classList.remove('opacity-0')"
-            />
+      <div class="flex flex-col gap-6 masonry-col"></div>
+      <div class="flex flex-col gap-6 masonry-col hidden md:flex"></div>
+      <div class="flex flex-col gap-6 masonry-col hidden lg:flex"></div>
+      <div class="flex flex-col gap-6 masonry-col hidden xl:flex"></div>
+    </div>
 
-            <div class="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-2">
-              <div class="flex flex-col gap-1 mb-4 translate-y-4 group-hover:translate-y-0 transition-transform duration-500 delay-75">
-                <span class="text-[10px] font-semibold uppercase tracking-[0.2em] text-white">
-                  {item.date}
-                </span>
-                <h3 class="text-white font-medium text-lg leading-tight line-clamp-1">
-                  {item.title}
-                </h3>
-              </div>
+    <script define:vars={{ initialItems }}>
+      window.BOOTSTRAP_DATA = initialItems;
+    </script>
 
-              <a
-                href={item.hdurl || item.url}
-                download={item.title}
-                target="_blank"
-                class="flex items-center justify-center gap-2 w-full py-3 rounded-3xl text-white font-bold text-[11px] uppercase tracking-widest translate-y-4 group-hover:translate-y-0 delay-150 border border-white/10 bg-black/10 backdrop-blur-xl transition-all duration-500 hover:border-white/20 hover:bg-black/60 shadow-[0_20px_50px_rgba(0,0,0,0.3)]"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="white"
-                  stroke-width="2.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <>
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                    <polyline points="7 10 12 15 17 10" />
-                    <line x1="12" y1="15" x2="12" y2="3" />
-                  </>
-                </svg>
-                Download
-              </a>
-            </div>
-          </div>
-        ))
-      }
+    <div
+      id="loading-sentinel"
+      class="py-20 flex flex-col items-center justify-center gap-4"
+    >
+      <div id="loader-icon" class="animate-spin">
+        <svg
+          data-testid="geist-icon"
+          height="16"
+          stroke-linejoin="round"
+          style="color: currentcolor; --darkreader-inline-color: currentcolor;"
+          viewBox="0 0 16 16"
+          width="16"
+          data-darkreader-inline-color=""
+          ><g clip-path="url(#clip0_2393_1490)">
+            <path
+              d="M8 0V4"
+              stroke="currentColor"
+              stroke-width="1.5"
+              style="--darkreader-inline-stroke: currentColor;"
+              data-darkreader-inline-stroke=""></path>
+            <path
+              opacity="0.5"
+              d="M8 16V12"
+              stroke="currentColor"
+              stroke-width="1.5"
+              style="--darkreader-inline-stroke: currentColor;"
+              data-darkreader-inline-stroke=""></path>
+            <path
+              opacity="0.9"
+              d="M3.29773 1.52783L5.64887 4.7639"
+              stroke="currentColor"
+              stroke-width="1.5"
+              style="--darkreader-inline-stroke: currentColor;"
+              data-darkreader-inline-stroke=""></path>
+            <path
+              opacity="0.1"
+              d="M12.7023 1.52783L10.3511 4.7639"
+              stroke="currentColor"
+              stroke-width="1.5"
+              style="--darkreader-inline-stroke: currentColor;"
+              data-darkreader-inline-stroke=""></path>
+            <path
+              opacity="0.4"
+              d="M12.7023 14.472L10.3511 11.236"
+              stroke="currentColor"
+              stroke-width="1.5"
+              style="--darkreader-inline-stroke: currentColor;"
+              data-darkreader-inline-stroke=""></path>
+            <path
+              opacity="0.6"
+              d="M3.29773 14.472L5.64887 11.236"
+              stroke="currentColor"
+              stroke-width="1.5"
+              style="--darkreader-inline-stroke: currentColor;"
+              data-darkreader-inline-stroke=""></path>
+            <path
+              opacity="0.2"
+              d="M15.6085 5.52783L11.8043 6.7639"
+              stroke="currentColor"
+              stroke-width="1.5"
+              style="--darkreader-inline-stroke: currentColor;"
+              data-darkreader-inline-stroke=""></path>
+            <path
+              opacity="0.7"
+              d="M0.391602 10.472L4.19583 9.23598"
+              stroke="currentColor"
+              stroke-width="1.5"
+              style="--darkreader-inline-stroke: currentColor;"
+              data-darkreader-inline-stroke=""></path>
+            <path
+              opacity="0.3"
+              d="M15.6085 10.4722L11.8043 9.2361"
+              stroke="currentColor"
+              stroke-width="1.5"
+              style="--darkreader-inline-stroke: currentColor;"
+              data-darkreader-inline-stroke=""></path>
+            <path
+              opacity="0.8"
+              d="M0.391602 5.52783L4.19583 6.7639"
+              stroke="currentColor"
+              stroke-width="1.5"
+              style="--darkreader-inline-stroke: currentColor;"
+              data-darkreader-inline-stroke=""></path>
+          </g>
+          <defs>
+            <clipPath id="clip0_2393_1490">
+              <rect
+                width="16"
+                height="16"
+                fill="white"
+                style="--darkreader-inline-fill: var(--darkreader-text-ffffff, #cdd6f4);"
+                data-darkreader-inline-fill=""></rect>
+            </clipPath>
+          </defs>
+        </svg>
+      </div>
+      <p
+        id="loader-text"
+        class="text-[10px] uppercase tracking-[0.3em] text-zinc-500 font-bold"
+      >
+        Scanning the deep space
+      </p>
     </div>
   </main>
 </Layout>
+
+<script>
+  const columns = document.querySelectorAll(".masonry-col");
+  const sentinel = document.getElementById("loading-sentinel");
+  let currentPage = 1;
+  let isLoading = false;
+  let colIndex = 0;
+
+  function getActiveColumns() {
+    return Array.from(columns).filter((col) => col.offsetParent !== null);
+  }
+
+  function createCardHTML(item) {
+    return `
+      <div class="gallery-card min-h-20 relative group rounded-3xl border border-white/10 bg-white/5 overflow-hidden transition-all duration-500 hover:border-white/20 hover:shadow-[0_0_80px_rgba(99,102,241,0.1)]  animate-fade-in">
+        <img
+          src="${item.url}"
+          alt="${item.title}"
+          class="w-full h-auto object-cover transition-all duration-1000 group-hover:scale-105 block"
+          loading="lazy"
+        />
+        <div href="/archive/${item.date.split('-')[0]}/${item.date.split('-')[1]}/${item.date.split('-')[2]}" class="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-4">
+          <a href="/archive/${item.date.split('-')[0]}/${item.date.split('-')[1]}/${item.date.split('-')[2]}">
+            <div class="mb-4 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+              <span class="text-[10px] font-semibold uppercase text-white">${item.date}</span>
+              <h3 class="text-white font-medium text-lg line-clamp-1">${item.title}</h3>
+            </div>
+          </a>
+          <a href="${item.hdurl || item.url}" target="_blank" class="w-full py-3 rounded-3xl text-white font-bold text-[11px] uppercase tracking-widest border border-white/10 bg-black/10 backdrop-blur-xl text-center flex items-center justify-center gap-2">
+            <span><svg data-testid="geist-icon" height="16" stroke-linejoin="round" style="color: currentcolor;" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" clip-rule="evenodd" d="M8.75 1V1.75V8.68934L10.7197 6.71967L11.25 6.18934L12.3107 7.25L11.7803 7.78033L8.70711 10.8536C8.31658 11.2441 7.68342 11.2441 7.29289 10.8536L4.21967 7.78033L3.68934 7.25L4.75 6.18934L5.28033 6.71967L7.25 8.68934V1.75V1H8.75ZM13.5 9.25V13.5H2.5V9.25V8.5H1V9.25V14C1 14.5523 1.44771 15 2 15H14C14.5523 15 15 14.5523 15 14V9.25V8.5H13.5V9.25Z" fill="currentColor"></path></svg></span>Download
+          </a>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderBatch(items) {
+    const activeCols = getActiveColumns();
+    items.forEach((item) => {
+      const target = activeCols[colIndex % activeCols.length];
+      target.insertAdjacentHTML("beforeend", createCardHTML(item));
+      colIndex++;
+    });
+  }
+
+  if (window.BOOTSTRAP_DATA) {
+    renderBatch(window.BOOTSTRAP_DATA);
+  }
+
+  const observer = new IntersectionObserver(
+    async (entries) => {
+      if (entries[0].isIntersecting && !isLoading) {
+        isLoading = true;
+        try {
+          const res = await fetch(`/api/gallery.json?page=${currentPage}`);
+          const { data } = await res.json();
+          if (data && data.length > 0) {
+            renderBatch(data);
+            currentPage++;
+          }
+        } catch (e) {
+          console.error("Gallery Error:", e);
+        } finally {
+          isLoading = false;
+        }
+      }
+    },
+    { rootMargin: "400px" },
+  );
+
+  observer.observe(sentinel);
+</script>
