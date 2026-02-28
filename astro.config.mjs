@@ -14,7 +14,7 @@ export default defineConfig({
   adapter: vercel({
     imageService: true,
     isr: {
-      exclude: ["/apod"],
+      exclude: ["/apod", "/random"],
     },
   }),
 
