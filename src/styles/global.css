@@ -33,6 +33,29 @@
   }
 }
 
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+.gallery-card img {
+  display: block;
+  width: 100%;
+  height: auto;
+  min-height: 200px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
 .animate-in {
   animation-fill-mode: forwards;
 }

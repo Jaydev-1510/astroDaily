@@ -46,8 +46,8 @@ const monthShort = dateObj.toLocaleString("default", { month: "short" });
       {
         days && days.length > 0 ? (
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-10 place-items-center">
-            {days.map((item) => (
-              <ApodCard Apod={item} />
+            {days.map((day) => (
+              <ApodCard Apod={day} />
             ))}
           </div>
         ) : (
