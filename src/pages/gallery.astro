@@ -11,9 +11,7 @@ const { data: rawItems } = await database
   .order("date", { ascending: false })
   .limit(40);
 
-const initialItems = rawItems
-  ?.filter((item) => /\.(jpg|jpeg|png|webp|gif|avif)$/i.test(item.url))
-  .slice(0, 20);
+const initialItems = rawItems?.filter((item) => item.url && /\.(jpg|jpeg|png|webp|gif|avif)$/i.test(item.url)).slice(0, 20) ?? [];
 ---
 
 <Layout title="Cosmic Gallery | astroDaily">
@@ -66,12 +64,19 @@ const initialItems = rawItems
   let currentPage = 1;
   let isLoading = false;
   let colIndex = 0;
-
+  
   function getActiveColumns() {
-    return Array.from(columns).filter((col) => col.offsetParent !== null);
+    return Array.from(columns).filter((col): col is HTMLElement => col instanceof HTMLElement && col.offsetParent !== null);
   }
-
-  function createCardHTML(item) {
+  
+  interface APODItem {
+    date: string;
+    title: string;
+    url: string;
+    hdurl?: string | null;
+  }
+  
+  function createCardHTML(item: APODItem): string {
     return `
       <div class="gallery-card min-h-20 relative group rounded-3xl border border-white/10 bg-white/5 overflow-hidden transition-all duration-500 hover:border-white/20 hover:shadow-[0_0_80px_rgba(99,102,241,0.1)]  animate-fade-in">
         <img
@@ -95,7 +100,7 @@ const initialItems = rawItems
     `;
   }
 
-  function renderBatch(items) {
+  function renderBatch(items: APODItem[]) {
     const activeCols = getActiveColumns();
     items.forEach((item) => {
       const target = activeCols[colIndex % activeCols.length];
@@ -104,9 +109,8 @@ const initialItems = rawItems
     });
   }
 
-  if (window.BOOTSTRAP_DATA) {
-    renderBatch(window.BOOTSTRAP_DATA);
-  }
+  const bootstrap = window.BOOTSTRAP_DATA ?? [];
+  renderBatch(bootstrap);
 
   const observer = new IntersectionObserver(
     async (entries) => {
@@ -129,5 +133,7 @@ const initialItems = rawItems
     { rootMargin: "400px" },
   );
 
-  observer.observe(sentinel);
+  if (sentinel) {
+    observer.observe(sentinel);
+  }
 </script>
