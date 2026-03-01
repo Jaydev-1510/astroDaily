@@ -16,8 +16,7 @@ export const GET: APIRoute = async ({ url }) => {
     .range(start, end);
 
   const imageExtensions = /\.(jpg|jpeg|png|webp|gif|avif)$/i;
-  const filteredData =
-    data?.filter((item) => imageExtensions.test(item.url)) || [];
+  const filteredData = data?.filter((item) => item.url != null && imageExtensions.test(item.url)) ?? [];
 
   return new Response(JSON.stringify({ data: filteredData, error }), {
     status: 200,
