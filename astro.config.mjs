@@ -5,6 +5,10 @@ import vercel from "@astrojs/vercel";
 import react from "@astrojs/react";
 
 export default defineConfig({
+  server: {
+    host: true
+  },
+  
   image: {
     domains: ["apod.nasa.gov", "astro.build"],
   },

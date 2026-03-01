@@ -1,0 +1,45 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<mask id="mask0_1_1339" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="0" y="0" width="16" height="16">
+<path d="M16 0H0V16H16V0Z" fill="white"/>
+</mask>
+<g mask="url(#mask0_1_1339)">
+<path d="M8 0V4V0Z" fill="black"/>
+<path d="M8 0V4" stroke="#666666" stroke-width="1.5" stroke-linejoin="round"/>
+<g opacity="0.5">
+<path d="M8 16V12V16Z" fill="black"/>
+<path d="M8 16V12" stroke="#666666" stroke-width="1.5" stroke-linejoin="round"/>
+</g>
+<g opacity="0.9">
+<path d="M3.29773 1.52783L5.64887 4.7639L3.29773 1.52783Z" fill="black"/>
+<path d="M3.29773 1.52783L5.64887 4.7639" stroke="#666666" stroke-width="1.5" stroke-linejoin="round"/>
+</g>
+<g opacity="0.1">
+<path d="M12.7023 1.52783L10.3511 4.7639L12.7023 1.52783Z" fill="black"/>
+<path d="M12.7023 1.52783L10.3511 4.7639" stroke="#666666" stroke-width="1.5" stroke-linejoin="round"/>
+</g>
+<g opacity="0.4">
+<path d="M12.7023 14.472L10.3511 11.236L12.7023 14.472Z" fill="black"/>
+<path d="M12.7023 14.472L10.3511 11.236" stroke="#666666" stroke-width="1.5" stroke-linejoin="round"/>
+</g>
+<g opacity="0.6">
+<path d="M3.29773 14.472L5.64887 11.236L3.29773 14.472Z" fill="black"/>
+<path d="M3.29773 14.472L5.64887 11.236" stroke="#666666" stroke-width="1.5" stroke-linejoin="round"/>
+</g>
+<g opacity="0.2">
+<path d="M15.6085 5.52783L11.8043 6.7639L15.6085 5.52783Z" fill="black"/>
+<path d="M15.6085 5.52783L11.8043 6.7639" stroke="#666666" stroke-width="1.5" stroke-linejoin="round"/>
+</g>
+<g opacity="0.7">
+<path d="M0.391602 10.472L4.19583 9.23596L0.391602 10.472Z" fill="black"/>
+<path d="M0.391602 10.472L4.19583 9.23596" stroke="#666666" stroke-width="1.5" stroke-linejoin="round"/>
+</g>
+<g opacity="0.3">
+<path d="M15.6085 10.4722L11.8043 9.23608L15.6085 10.4722Z" fill="black"/>
+<path d="M15.6085 10.4722L11.8043 9.23608" stroke="#666666" stroke-width="1.5" stroke-linejoin="round"/>
+</g>
+<g opacity="0.8">
+<path d="M0.391602 5.52783L4.19583 6.7639L0.391602 5.52783Z" fill="black"/>
+<path d="M0.391602 5.52783L4.19583 6.7639" stroke="#666666" stroke-width="1.5" stroke-linejoin="round"/>
+</g>
+</g>
+</svg>

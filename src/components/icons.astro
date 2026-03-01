@@ -1,0 +1,6 @@
+---
+const { glyph, ...props } = Astro.props;
+const icons = import.meta.glob("../icons/*.svg", { eager: true });
+const Icon = icons[`../icons/${glyph}.svg`]?.default;
+---
+{Icon && <Icon {...props} />}
