@@ -22,7 +22,7 @@ async function fetchApods(
     response = response.concat(chunkResponse);
   }
   for (let part of response) {
-    part.created_at = new Date();
+    part.created_at = String(new Date());
   }
   return response;
 }
@@ -44,7 +44,7 @@ async function fetchLastDate() {
 
 interface APISchema {
   copyright?: string | null;
-  created_at?: string | Date | null;
+  created_at?: string | null;
   date: string;
   error_flag?: boolean | null;
   error_message?: string | null;
