@@ -5,26 +5,21 @@ import vercel from "@astrojs/vercel";
 import react from "@astrojs/react";
 
 export default defineConfig({
-  server: {
-    host: true
+  server: { 
+    host: true,
   },
-  
   image: {
     domains: ["apod.nasa.gov", "astro.build"],
   },
-
   output: "server",
-
   adapter: vercel({
     imageService: true,
     isr: {
-      exclude: ["/apod", "/random", "/gallery", "/api/gallery.json"],
+      exclude: ["/apod", "/random", "/gallery", "/api/*"],
     },
   }),
-
   vite: {
     plugins: [tailwindcss()],
   },
-
   integrations: [react()],
 });

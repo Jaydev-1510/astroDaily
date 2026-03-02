@@ -2,21 +2,49 @@
 import "@styles/global.css";
 import NavBar from "@components/navBar.astro";
 import Footer from "@components/footer.astro";
-const { ogImage, title } = Astro.props;
+
+const {
+  title = "astroDaily",
+  description = "An archive + gallery of NASA's astronomy picture of the day.",
+  ogImage = "/banner.png",
+  canonical = Astro.url.href,
+  type = "website",
+  author = "NASA",
+} = Astro.props;
 ---
 
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8" />
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content={author} />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" />
-    <meta name="theme-color" content="#000000" />
+
+    <meta property="og:type" content={type} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImage} />
-    <meta name="viewport" content="width=device-width" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content="astroDaily | a NASA APOD Archive" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
     <meta name="generator" content={Astro.generator} />
-    <title>{title}</title>
   </head>
+
   <body class="bg-black text-white scroll-smooth min-h-dvh font-sans antialiased selection:bg-white selection:text-black max-w-screen min-w-screen">
     <NavBar />
     <slot />
