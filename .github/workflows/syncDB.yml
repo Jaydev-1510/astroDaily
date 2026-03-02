@@ -3,7 +3,7 @@ name: Daily Sync Database
 on:
   workflow_dispatch:
   schedule:
-    - cron: "6 0 * * *"
+    - cron: '0 6 * * *'
 
 jobs:
   sync:
@@ -19,7 +19,7 @@ jobs:
         run: bun install
 
       - name: sync database
-        run: bun run ./scripts/syncDB.ts
+        run: bun run syncDB
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
