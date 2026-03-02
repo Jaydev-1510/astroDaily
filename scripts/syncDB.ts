@@ -21,9 +21,6 @@ async function fetchApods(
     ).then((r) => r.json());
     response = response.concat(chunkResponse);
   }
-  for (let part of response) {
-    part.created_at = String(new Date());
-  }
   return response;
 }
 
