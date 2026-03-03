@@ -45,9 +45,11 @@ const {
     <meta name="generator" content={Astro.generator} />
   </head>
 
-  <body class="bg-black text-white scroll-smooth min-h-dvh font-sans antialiased selection:bg-white selection:text-black max-w-screen min-w-screen">
+  <body class="bg-black text-white scroll-smooth min-h-dvh font-sans antialiased selection:bg-white selection:text-black w-screen">
     <NavBar />
-    <slot />
+    <main>
+      <slot />
+    </main>
     <Footer />
   </body>
 </html>
