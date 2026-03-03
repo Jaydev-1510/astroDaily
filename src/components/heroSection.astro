@@ -1,0 +1,38 @@
+---
+import Icon from "@components/icons.astro";
+
+const hour = new Date().getHours();
+const greeting =
+  hour < 6 ? "Midnight Transmission" :
+  hour < 12 ? "Good Morning, Earth" :
+  hour < 18 ? "Good Afternoon, Explorer" :
+  "Good Evening, Stargazer";
+---
+
+<section id="hero" aria-labelledby="hero-heading" class="relative flex flex-col h-dvh w-full items-center justify-center px-6 py-25 gap-8" >
+  <div aria-hidden="true" class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.05),transparent_60%)]" ></div>
+
+    <p class="text-xs font-bold tracking-[0.3em] uppercase text-zinc-500">
+      {greeting}
+    </p>
+
+    <h1 id="hero-heading" class="font-bold text-6xl sm:text-8xl md:text-9xl lg:text-[10rem] xl:text-[12rem] tracking-tight text-transparent bg-clip-text bg-linear-to-b from-white to-zinc-400 leading-none">
+      astroDaily
+    </h1>
+
+    <p class="max-w-xl text-lg md:text-xl text-zinc-400 leading-relaxed text-center">
+      A curated archive of NASA’s Astronomy Picture of the Day — organized by date, history, and visual discovery.
+    </p>
+
+    <div class="flex gap-6 items-center">
+      <a href="#todays-apod" class="rounded-3xl bg-white px-6 py-3 text-sm font-semibold text-black transition-transform active:scale-95 hover:bg-zinc-200" >
+        View Today’s Image
+      </a>
+
+      <a href="/gallery" class="flex gap-1 group items-center text-sm font-semibold text-zinc-400 hover:text-zinc-200 transition-colors duration-300" >
+        Browse Archive
+        <Icon glyph="arrow-right" class="group-hover:translate-x-1 transition-transform duration-300"/>
+      </a>
+    </div>
+
+</section>

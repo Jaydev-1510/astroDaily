@@ -1,0 +1,45 @@
+---
+import { database } from "@lib/database";
+import ApodCard from "@components/preApodCard.astro";
+
+const { data } = await database
+  .from("APODs")
+  .select("*")
+  .order("date", { ascending: false })
+  .limit(1)
+  .single();
+
+const month = Number(data?.date.split("-")[1]);
+const day = Number(data?.date.split("-")[2]);
+
+const { data: anniversaries } = await database.rpc("get_apods_by_date", {
+  m: month,
+  d: day,
+});
+
+anniversaries?.pop();
+---
+
+<section id="history" aria-labelledby="history-heading" class="w-full py-24 px-6 md:py-32 flex flex-col gap-12 justify-center" >
+  <header class="flex flex-col items-center text-center gap-4">
+    <p class="text-xs font-semibold uppercase tracking-[0.3em] text-zinc-500">
+      Time Travel
+    </p>
+    <h2 id="history-heading" class="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-zinc-100" >
+      Pictures from this day in history
+    </h2>
+  </header>
+
+  {anniversaries && anniversaries.length > 0 ? (
+    <div class="flex flex-row gap-6 md:gap-10 items-center overflow-x-auto scrollbar-hidden snap-x snap-mandatory scroll-smooth">
+      {anniversaries.map((item) => (
+        <ApodCard Apod={item} classList="snap-center snap-always" />
+      ))}
+    </div> ) : (
+    <div class="flex flex-col items-center justify-center py-40 border border-dashed border-white/10 rounded-3xl">
+      <p class="text-sm tracking-widest uppercase text-zinc-600">
+        No cosmic data found for this period
+      </p>
+    </div>
+  )}
+</section>

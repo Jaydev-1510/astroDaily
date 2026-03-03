@@ -68,3 +68,14 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+body::after {
+  content: "";
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  height: 6rem;
+  pointer-events: none;
+  background: linear-gradient(to top, black 5%, transparent);
+  z-index: 40;
+}
