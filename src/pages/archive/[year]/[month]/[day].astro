@@ -18,7 +18,7 @@ if (error || !data) {
   return Astro.redirect("/404");
 }
 
-const ogUrl = `https://astro--daily.vercel.app/api/og/${formattedDate}`;
+const ogUrl = `https://astro--daily.vercel.app/api/og/${formattedDate}.png`;
 console.log(ogUrl)
 
 Astro.response.headers.set(
