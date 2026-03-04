@@ -49,7 +49,7 @@ const shareMessage = encodeURIComponent(`${shareUrl}\nCheck out this amazing Ast
       <figure class="w-full relative group mb-24 animate-in fade-in zoom-in-95 duration-1000 delay-200" >
         <div class="absolute inset-0 bg-white/5 blur-3xl rounded-2xl opacity-20 group-hover:opacity-30 transition-opacity" ></div>
         <Image width={500} height={800} loading="eager" src={Apod?.url || "https://astro.build/assets/press/astro-logo-light-gradient.png"} alt={`${Apod?.title} (${Apod?.url})` || "NASA"} class="relative w-full object-cover rounded-3xl md:rounded-[2.5rem] border border-white/10 shadow-2xl shadow-black" />
-        <div class="absolute md:bottom-6 md:right-8 bottom-3 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex gap-1" >
+        <div class="absolute md:bottom-6 md:right-8 bottom-3 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex gap-1" >
           <p class="text-[10px] text-right tracking-widest uppercase text-white/50 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10" >
             &copy; {Apod?.copyright || "NASA"}
           </p>
@@ -76,53 +76,56 @@ const shareMessage = encodeURIComponent(`${shareUrl}\nCheck out this amazing Ast
             <h3 class="text-xs font-bold uppercase tracking-widest text-zinc-400 mb-4" >
               Metadata
             </h3>
+            
             <div class="space-y-4">
               <div class="flex justify-between items-center border-b border-white/5 pb-3" >
                 <span class="text-sm text-zinc-500">Source</span>
                 <span class="text-sm text-zinc-200 text-right">NASA APOD</span>
               </div>
+              
               <div class="flex justify-between items-center">
                 <span class="text-sm text-zinc-500">
                   Credit
                 </span>
+                
                 <span class="text-sm text-zinc-200 text-right">
                   {Apod?.copyright || "Public Domain"}
                 </span>
               </div>
             </div>
           </div>
+          
           <div class="p-6 rounded-2xl border border-white/5 bg-white/2 backdrop-blur-sm" >
             <h3 class="text-xs font-bold uppercase tracking-widest text-zinc-400 mb-4" >
               Share
             </h3>
             <p class="flex flex-row gap-7 items-center justify-between px-7">
-
-              <button onclick={`window.open('https://wa.me/?text=${shareMessage}', '_blank')`} class="hover:scale-120 transition-transform duration-500 cursor-pointer" >
+              <button title="Share on Whatsapp" onclick={`window.open('https://wa.me/?text=${shareMessage}', '_blank')`} class="hover:scale-120 transition-transform duration-300 cursor-pointer" >
                 <Icon glyph="logo-whats-app"/>
               </button>
 
-              <button onclick={`window.open('https://www.facebook.com/sharer/sharer.php?u=${Astro.url}', '_blank')`} class="hover:scale-120 transition-transform duration-500 cursor-pointer" >
+              <button title="Share on Facebook" onclick={`window.open('https://www.facebook.com/sharer/sharer.php?u=${Astro.url}', '_blank')`} class="hover:scale-120 transition-transform duration-300 cursor-pointer" >
                 <Icon glyph="logo-facebook" />
               </button>
 
-              <button onclick={`window.open('https://x.com/intent/tweet?text=${shareMessage}', '_blank')`} class="hover:scale-120 transition-transform duration-500 cursor-pointer" >
+              <button title="Share on X (Twitter)" onclick={`window.open('https://x.com/intent/tweet?text=${shareMessage}', '_blank')`} class="hover:scale-120 transition-transform duration-300 cursor-pointer" >
                 <Icon glyph="logo-twitter-x" />
               </button>
 
-              <button onclick={`window.open('https://www.reddit.com/submit?url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(shareTitle)}','_blank')`}} class="hover:scale-120 transition-transform duration-500 cursor-pointer" >
+              <button title="Share on Reddit" onclick={`window.open('https://www.reddit.com/submit?url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(shareTitle)}','_blank')`}} class="hover:scale-120 transition-transform duration-300 cursor-pointer" >
                 <Icon glyph="logo-reddit" />
               </button>
 
-              <button onclick={`window.open('https://www.linkedin.com/sharing/share-offsite/?url=${shareUrl}', '_blank')`} class="hover:scale-120 transition-transform duration-500 cursor-pointer" >
+              <button title="Share on LinkedIn" onclick={`window.open('https://www.linkedin.com/sharing/share-offsite/?url=${shareUrl}', '_blank')`} class="hover:scale-120 transition-transform duration-300 cursor-pointer" >
                 <Icon glyph="linkedin" />
               </button>
 
-              <button onclick={`navigator.clipboard.writeText('${shareUrl}'); this.classList.add('text-green-500'); setTimeout(() => this.classList.remove('text-green-500'), 2000);`} class="hover:scale-120 transition-all duration-500 cursor-pointer" >
+              <button title="Copy link" onclick={`navigator.clipboard.writeText('${shareUrl}'); this.classList.add('text-green-500'); setTimeout(() => this.classList.remove('text-green-500'), 2000);`} class="hover:scale-120 transition-all duration-300 cursor-pointer" >
                 <Icon glyph="copy" />
               </button>
-
             </p>
           </div>
+          
           <a href="/archive" class="group flex items-center justify-center gap-2 py-4 rounded-3xl bg-white text-black font-semibold text-sm transition-transform active:scale-95 hover:bg-zinc-200" >
             Browse Archive
             <Icon glyph="arrow-right" class="group-hover:translate-x-2 transition-transform duration-200" />

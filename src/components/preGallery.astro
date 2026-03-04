@@ -14,37 +14,37 @@ const { data:galleryItems} = await res.json();
 ---
 
 <section id="gallery-preview" aria-labelledby="gallery-heading" class="w-full max-w-7xl py-24 md:py-32 hidden md:flex flex-col gap-16 mx-auto" >
-    <header class="text-center">
-      <h2 id="gallery-heading" class="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-zinc-100">
-        Gallery
-      </h2>
-    </header>
+  <header class="text-center">
+    <h2 id="gallery-heading" class="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-zinc-100">
+      Gallery
+    </h2>
+  </header>
 
-    <div class="relative max-h-screen overflow-hidden after:content-[''] after:pointer-events-none after:absolute after:bottom-0 after:left-0 after:right-0 after:h-40 after:bg-linear-to-t after:from-black after:to-transparent">
-      <div class="columns-1 md:columns-2 lg:columns-3 xl:columns-4 gap-8 space-y-8 ">
-        {galleryItems?.map((item:APODItem) => (
-        <article class="break-inside-avoid">
-          <figure class="group relative overflow-hidden rounded-3xl bg-white/5 transition-all duration-500 hover:bg-white/10" >
-            <Image src={item.url || ""} width={800} height={1000} alt={item.title} loading="lazy" class="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-[1.03]" />
-            <figcaption class="absolute inset-0 flex items-end bg-linear-to-t from-black/80 via-black/30 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" >
-              <div class="p-4 flex flex-col gap-1 translate-y-4 transition-transform duration-500 group-hover:translate-y-0">
-                <span class="text-xs font-semibold uppercase tracking-[0.3em] text-white/70">
-                  {item.date}
-                </span>
-                <h3 class="text-white text-lg font-medium leading-tight line-clamp-1">
-                  {item.title}
-                </h3>
-              </div>
-            </figcaption>
-          </figure>
-        </article>
-      ))}
-      </div>
+  <div class="relative max-h-screen overflow-hidden after:content-[''] after:pointer-events-none after:absolute after:bottom-0 after:left-0 after:right-0 after:h-40 after:bg-linear-to-t after:from-black after:to-transparent">
+    <div class="columns-1 md:columns-2 lg:columns-3 xl:columns-4 gap-8 space-y-8 ">
+      {galleryItems?.map((item:APODItem) => (
+      <article class="break-inside-avoid">
+        <figure class="group relative overflow-hidden rounded-3xl bg-white/5 transition-all duration-500 hover:bg-white/10" >
+          <Image src={item.url || ""} width={800} height={1000} alt={item.title} loading="lazy" class="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-[1.03]" />
+          <figcaption class="absolute inset-0 flex items-end bg-linear-to-t from-black/80 via-black/30 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" >
+            <div class="p-4 flex flex-col gap-1 translate-y-4 transition-transform duration-500 group-hover:translate-y-0">
+              <span class="text-xs font-semibold uppercase tracking-[0.3em] text-white/70">
+                {item.date}
+              </span>
+              <h3 class="text-white text-lg font-medium leading-tight line-clamp-1">
+                {item.title}
+              </h3>
+            </div>
+          </figcaption>
+        </figure>
+      </article>
+    ))}
     </div>
-    <div class="flex justify-center">
-      <a href="/gallery" class="group flex items-center justify-center gap-2 rounded-3xl bg-white px-8 py-4 text-sm font-semibold text-black transition-transform active:scale-95 hover:bg-zinc-200" >
-        View full gallery
-        <Icon glyph="arrow-right" class="group-hover:translate-x-1 transition-transform duration-300"/>
-      </a>
-    </div>
+  </div>
+  <div class="flex justify-center">
+    <a href="/gallery" class="group flex items-center justify-center gap-2 rounded-3xl bg-white px-8 py-4 text-sm font-semibold text-black transition-transform active:scale-95 hover:bg-zinc-200" >
+      View full gallery
+      <Icon glyph="arrow-right" class="group-hover:translate-x-1 transition-transform duration-300"/>
+    </a>
+  </div>
 </section>
