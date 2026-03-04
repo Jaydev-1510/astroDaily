@@ -2,8 +2,6 @@ import { defineConfig } from "astro/config";
 import tailwindcss from "@tailwindcss/vite";
 import vercel from "@astrojs/vercel";
 
-import react from "@astrojs/react";
-
 export default defineConfig({
   site: "https://astro--daily.vercel.app",
   server: { 
@@ -15,12 +13,9 @@ export default defineConfig({
   output: "server",
   adapter: vercel({
     imageService: true,
-    isr: {
-      exclude: ["/apod", "/random", "/gallery", "/api/gallery.json"],
-    },
   }),
   vite: {
     plugins: [tailwindcss()],
   },
-  integrations: [react()],
+  integrations: [],
 });
