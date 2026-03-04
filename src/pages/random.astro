@@ -29,8 +29,8 @@ const { data: apod, error } = await database
     </div>
     <div class="flex flex-col items-center justify-center gap-10">
       <ApodCard Apod={apod?.[0]} />
-      <a href="/random" class="w-9/10 max-w-125 min-w-80 md:min-w-90 relative group flex items-center justify-center gap-2 py-4 rounded-2xl bg-white text-black font-semibold text-sm transition-transform active:scale-95 hover:bg-zinc-200">
-        Randomize
+      <a href="/random" class="w-9/10 max-w-125 min-w-80 md:min-w-90 relative group flex items-center justify-center gap-2 py-4 rounded-3xl bg-white text-black font-semibold text-sm transition-transform active:scale-95 hover:bg-zinc-200">
+        Show another
         <Icon glyph="refresh-clockwise" class="group-hover:rotate-180 transition-transform duration-300" />
       </a>
     </div>
