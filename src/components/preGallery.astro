@@ -13,7 +13,7 @@ const res = await fetch(`http://localhost:4321/api/gallery.json?page=${1}`);
 const { data:galleryItems} = await res.json();
 ---
 
-<section id="gallery-preview" aria-labelledby="gallery-heading" class="w-full max-w-7xl py-24 md:py-32 hidden md:flex flex-col gap-16 mx-auto" >
+<section id="gallery-preview" aria-labelledby="gallery-heading" class="w-full max-w-7xl md:py-32 hidden md:flex flex-col gap-16 mx-auto" >
   <header class="text-center">
     <h2 id="gallery-heading" class="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-zinc-100">
       Gallery

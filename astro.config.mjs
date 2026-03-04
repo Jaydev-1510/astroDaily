@@ -1,10 +1,11 @@
 import { defineConfig } from "astro/config";
 import tailwindcss from "@tailwindcss/vite";
 import vercel from "@astrojs/vercel";
+import sitemap from "@astrojs/sitemap";
 
 export default defineConfig({
   site: "https://astro--daily.vercel.app",
-  server: { 
+  server: {
     host: true,
   },
   image: {
@@ -17,5 +18,5 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
   },
-  integrations: [],
+  integrations: [sitemap()],
 });
