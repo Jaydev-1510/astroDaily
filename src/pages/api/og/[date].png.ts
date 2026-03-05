@@ -23,11 +23,11 @@ export const GET: APIRoute = async ({ params }) => {
       .select("*")
       .eq("date", day)
       .single();
-    
-    if (Apod?.url && ! Apod?.url.match(/\.(jpg|jpeg|png|webp|gif|avif)$/i)) {
+
+    if (Apod?.url && !Apod?.url.match(/\.(jpg|jpeg|png|webp|gif|avif)$/i)) {
       return Response.redirect("/banner.png", 302);
     }
-    
+
     return new ImageResponse(
       {
         type: "div",
@@ -151,5 +151,7 @@ export const GET: APIRoute = async ({ params }) => {
         ],
       },
     );
-  } catch {return Response.redirect("/banner.png", 302);}
+  } catch {
+    return Response.redirect("/banner.png", 302);
+  }
 };
