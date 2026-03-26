@@ -26,12 +26,14 @@ import Icon from "@components/icons.astro";
   </div>
 </section>
 <script>
-  const hour = new Date().getHours();
-  const greeting =
-    hour < 6 ? "Midnight Transmission" :
-    hour < 12 ? "Good Morning, Earth" :
-    hour < 17 ? "Good Afternoon, Explorer" :
-    "Good Evening, Stargazer";
-
-  document.getElementById("greeting")!.textContent = greeting;
+  document.addEventListener('astro:page-load', () =>{
+    const hour = new Date().getHours();
+    const greeting =
+      hour < 6 ? "Midnight Transmission" :
+      hour < 12 ? "Good Morning, Earth" :
+      hour < 17 ? "Good Afternoon, Explorer" :
+      "Good Evening, Stargazer";
+  
+    document.getElementById("greeting")!.textContent = greeting;
+  });
 </script>
