@@ -42,38 +42,25 @@ const getMonthName = (m: string) =>
 const months = Object.keys(groupedByMonth || {}).sort();
 ---
 
-<Layout title={`Archive ${year}`}>
-  <main class="pt-32 px-6 max-w-7xl mx-auto">
+<Layout title={`Archive ${year} | astroDaily`}>
+  <section class="pt-32 px-6 max-w-7xl mx-auto">
     <header class="mb-20 text-center">
-      <h1
-        class="font-sans font-bold text-9xl md:text-[12rem] tracking-tighter absolute left-1/2 -translate-x-1/2 top-20 select-none text-center bg-linear-0 from-black to-zinc-500 text-transparent bg-clip-text duration-700 hover:to-zinc-300 transition-colors"
-      >
+      <h1 class="font-sans font-bold text-9xl md:text-[12rem] tracking-tighter absolute left-1/2 -translate-x-1/2 top-20 select-none text-center bg-linear-0 from-black to-zinc-500 text-transparent bg-clip-text duration-700 hover:to-zinc-300 transition-colors" >
         {year}
       </h1>
-      <h2
-        class="relative text-4xl md:text-6xl text-shadow-black font-bold text-zinc-100 tracking-tight mt-10 font-sans"
-      >
+      <h2 class="relative text-4xl md:text-6xl text-shadow-black font-bold text-zinc-100 tracking-tight font-sans" >
         Yearly Archive
       </h2>
-      <div class="h-1 w-12 bg-zinc-500 mx-auto mt-6 rounded-full"></div>
     </header>
 
-    <nav
-      class="grid bg-white/2 grid-cols-6 md:flex lg:flex justify-center gap-6 md:gap-10 lg:gap-10 mb-20 place-items-center border border-[#252525] rounded-3xl py-7 px-5"
-    >
+    <nav class="grid bg-white/2 grid-cols-6 md:flex lg:flex justify-center gap-6 md:gap-10 lg:gap-10 mb-20 place-items-center border border-[#252525] rounded-3xl py-7 px-5" >
       {
         months.map((m) => (
           <div class="flex flex-row gap-1 justify-center items-center">
-            <a
-              href={`#${getMonthName(m)}`}
-              class="text-sm font-bold uppercase tracking-widest text-zinc-500 hover:text-white transition-colors duration-300"
-            >
+            <a href={`#${getMonthName(m)}`} class="text-sm font-bold uppercase tracking-widest text-zinc-500 hover:text-white transition-colors duration-300" >
               {getMonthName(m).slice(0, 3)}
             </a>
-            <a
-              href={`/archive/${year}/${m}`}
-              class="text-sm font-bold uppercase tracking-widest text-zinc-500 hover:text-white transition-colors duration-300"
-            >
+            <a href={`/archive/${year}/${m}`} target="_blank" class="text-sm font-bold uppercase tracking-widest text-zinc-500 hover:text-white transition-colors duration-300" >
               <Icon glyph="external-small" />
             </a>
           </div>
@@ -103,5 +90,5 @@ const months = Object.keys(groupedByMonth || {}).sort();
         ))
       }
     </div>
-  </main>
+  </section>
 </Layout>
