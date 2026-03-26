@@ -1,6 +1,266 @@
 ---
 import Layout from "@layouts/base.astro";
+import Icon from "@components/icons.astro"
+
+const currentYear = new Date().getFullYear();
+const FIRST_YEAR  = 1995;
+
+const years: number[] = [];
+for (let y = currentYear; y >= FIRST_YEAR; y--) years.push(y);
+
+type DecadeGroup = { decade: string; years: number[] };
+const decades: DecadeGroup[] = [];
+for (let d = Math.floor(currentYear / 10) * 10; d >= 1990; d -= 10) {
+  const slice = years.filter((y) => y >= d && y < d + 10);
+  if (slice.length) decades.push({ decade: `${d}s`, years: slice });
+}
+
+const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 ---
 
 <Layout title="Archive | astroDaily">
+  <section class="relative px-6 pt-32">
+    <header class="mb-20 text-center">
+      <h1 class="font-sans font-bold text-8xl md:text-[12rem] tracking-tighter absolute left-1/2 -translate-x-1/2 top-0 select-none text-center bg-linear-0 from-black to-zinc-500 text-transparent bg-clip-text duration-700 hover:to-zinc-200 transition-colors whitespace-nowrap pointer-events-none" >
+        Archive
+      </h1>
+      <h2 class="relative text-4xl md:text-6xl text-shadow-black font-bold text-zinc-100 tracking-tight font-sans" >
+        {currentYear - FIRST_YEAR + 1} years of the cosmos
+      </h2>
+      <h3 class="text-zinc-400 relative text-[12px] md:text-[14px] text-shadow-black font-bold tracking-widest uppercase font-sans mt-2" >
+        One picture at a time.
+      </h3>
+    </header>
+
+    <div class="max-w-7xl mx-auto space-y-28">
+      <section class="relative group">
+        <div class="relative rounded-3xl border border-white/5 bg-white/2 backdrop-blur-sm overflow-hidden px-8 py-12 md:px-16 flex flex-col md:flex-row items-center gap-10 md:gap-16">
+
+          <div aria-hidden="true" class="absolute -top-20 -left-10 w-72 h-72 bg-zinc-500/5 blur-[80px] rounded-full pointer-events-none"></div>
+
+          <div class="flex-1 text-center md:text-left">
+            <p class="text-xs tracking-[0.28em] uppercase text-zinc-600 mb-3">Full-text search</p>
+            <h3 class="text-3xl md:text-4xl font-bold text-zinc-200 tracking-tight leading-snug mb-4">
+              Find any picture,<br/>any word, any sky.
+            </h3>
+            <p class="text-sm text-zinc-500 leading-relaxed max-w-md">
+              Search across every title, explanation, and credit in the entire APOD
+              collection — powered by Postgres full-text search.
+            </p>
+          </div>
+
+          <div class="w-full md:w-96 shrink-0">
+            <form action="/archive/search" method="get" class="relative" >
+              <Icon glyph="magnifying-glass" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 pointer-events-none z-10 transition-colors duration-300 group-focus-within:text-zinc-400" />
+              <div class="absolute -inset-px rounded-2xl bg-linear-to-r from-zinc-700 via-zinc-500 to-zinc-700 opacity-0 transition-opacity duration-500 group-focus-within:opacity-100 blur-sm pointer-events-none"></div>
+              <input type="search" name="q" placeholder="nebula, aurora, black hole…" autocomplete="off" class="w-full bg-zinc-900/80 border border-white/8 rounded-2xl pl-11 pr-14 py-3.5 text-zinc-300 placeholder-zinc-600 font-sans text-sm tracking-wide focus:outline-none focus:border-zinc-600 transition-colors duration-300 backdrop-blur-sm" />
+
+              <button type="submit" aria-label="Search" class="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-xl bg-white/5 border border-white/8 hover:bg-white/10 hover:border-zinc-500 transition-all duration-200 flex items-center justify-center text-zinc-400 hover:text-zinc-200" >
+                <Icon glyph="arrow-right" />
+              </button>
+            </form>
+
+            <div class="flex flex-wrap gap-2 mt-3">
+              {["Milky Way", "eclipse", "Jupiter", "nebula", "aurora"].map((term) => (
+                <a
+                  href={`/archive/search?q=${encodeURIComponent(term)}`}
+                  class="text-[11px] tracking-widest uppercase text-zinc-600 border border-white/20 rounded-full px-3 py-1 hover:border-zinc-500 hover:text-zinc-300 transition-all duration-200"
+                >
+                  {term}
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <section>
+        <header class="mb-8 flex items-baseline gap-4">
+          <h3 class="text-xs semibold tracking-[0.3em] uppercase text-zinc-500">
+            Navigate by URL
+          </h3>
+
+          <span class="flex-1 h-px bg-white/5"></span>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <a href={`/archive/${currentYear}`} class="group relative rounded-3xl border border-white/5 bg-white/2 p-6 hover:border-white/20 hover:bg-white/6 transition-all duration-500 overflow-hidden" >
+            <div aria-hidden="true" class="absolute -bottom-10 -right-4 text-9xl font-bold text-white/2 select-none font-mono tracking-tighter pointer-events-none">Y</div>
+
+            <p class="text-[11px] tracking-[0.2em] uppercase text-zinc-600 mb-2">
+              Year
+            </p>
+
+            <code class="text-zinc-300 text-sm font-mono block mb-3">
+              /archive/<span class="text-zinc-500">{currentYear}</span>
+            </code>
+
+            <p class="text-xs text-zinc-600 leading-relaxed text-balance">
+              Every APOD in a given year, grouped by month.
+            </p>
+
+            <span class="mt-4 inline-flex items-center gap-1.5 text-[11px] tracking-widest uppercase text-zinc-600 group-hover:text-zinc-300 transition-colors duration-200">
+              Try it <Icon glyph="arrow-up-right" class="w-3 h-3 group-hover:translate-x-0.5 transition-transform duration-200"/>
+            </span>
+          </a>
+
+          <a href={`/archive/${currentYear}/01`} class="group relative rounded-3xl border border-white/5 bg-white/2 p-6 hover:border-white/20 hover:bg-white/6 transition-all duration-500 overflow-hidden" >
+            <div aria-hidden="true" class="absolute -bottom-10 -right-4 text-9xl font-bold text-white/2 select-none font-mono tracking-tighter pointer-events-none">M</div>
+
+            <p class="text-[11px] tracking-[0.2em] uppercase text-zinc-600 mb-2">
+              Year + Month
+            </p>
+
+            <code class="text-zinc-300 text-sm font-mono block mb-3">
+              /archive/<span class="text-zinc-500">{currentYear}</span>/<span class="text-zinc-400">01</span>
+            </code>
+
+            <p class="text-xs text-zinc-600 leading-relaxed">
+              All pictures from a specific month.
+            </p>
+
+            <span class="mt-4 inline-flex items-center gap-1.5 text-[11px] tracking-widest uppercase text-zinc-600 group-hover:text-zinc-300 transition-colors duration-200">
+              Try it <Icon glyph="arrow-up-right" class="w-3 h-3 group-hover:translate-x-0.5 transition-transform duration-200"/>
+            </span>
+          </a>
+
+          <a href={`/archive/${currentYear}/01/01`} class="group relative rounded-3xl border border-white/5 bg-white/2 p-6 hover:border-white/20 hover:bg-white/6 transition-all duration-500 overflow-hidden" >
+            <div aria-hidden="true" class="absolute -bottom-10 -right-4 text-9xl font-bold text-white/2 select-none font-mono tracking-tighter pointer-events-none">D</div>
+
+            <p class="text-[11px] tracking-[0.2em] uppercase text-zinc-600 mb-2">
+              Year + Month + Day
+            </p>
+
+            <code class="text-zinc-300 text-sm font-mono block mb-3">
+              /archive/<span class="text-zinc-500">{currentYear}</span>/<span class="text-zinc-400">01</span>/<span class="text-zinc-300">01</span>
+            </code>
+
+            <p class="text-xs text-zinc-600 leading-relaxed">
+              Jump directly to a specific picture.
+            </p>
+
+            <span class="mt-4 inline-flex items-center gap-1.5 text-[11px] tracking-widest uppercase text-zinc-600 group-hover:text-zinc-300 transition-colors duration-200">
+              Try it <Icon glyph="arrow-up-right" class="w-3 h-3 group-hover:translate-x-0.5 transition-transform duration-200"/>
+            </span>
+          </a>
+        </div>
+
+        <div class="mt-6 rounded-2xl border border-white/6 bg-zinc-900/20 p-6">
+          <p class="text-[11px] tracking-[0.2em] uppercase text-zinc-600 mb-4">Build a URL</p>
+
+          <div class="flex flex-wrap items-center gap-2 font-mono text-sm">
+            <span class="text-zinc-600">/archive/</span>
+
+            <select
+              id="url-year"
+              class="bg-zinc-900 border border-white/8 rounded-lg px-2 py-1 text-zinc-500 text-sm font-mono focus:outline-none focus:border-zinc-600 transition-colors"
+            >
+              {years.map((y) => (
+                <option value={y} selected={y === currentYear}>{y}</option>
+              ))}
+            </select>
+
+            <span class="text-zinc-700">/</span>
+
+            <select id="url-month" class="bg-zinc-900 border border-white/8 rounded-lg px-2 py-1 text-zinc-400 text-sm font-mono focus:outline-none focus:border-zinc-600 transition-colors" >
+              <option value="">— month</option>
+              {MONTHS.map((m, i) => {
+                const val = String(i + 1).padStart(2, "0");
+                return <option value={val}>{val} · {m}</option>;
+              })}
+            </select>
+
+            <span class="text-zinc-700">/</span>
+
+            <select id="url-day" class="bg-zinc-900 border border-white/8 rounded-lg px-2 py-1 text-zinc-300 text-sm font-mono focus:outline-none focus:border-zinc-600 transition-colors" >
+              <option value="">— day</option>
+              {Array.from({ length: 31 }, (_, i) => i + 1).map((d) => {
+                const val = String(d).padStart(2, "0");
+                return <option value={val}>{val}</option>;
+              })}
+            </select>
+
+            <a id="url-go" href={`/archive/${currentYear}`} class="ml-2 inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/8 text-zinc-400 text-xs tracking-widest uppercase hover:border-zinc-500 hover:text-zinc-200 transition-all duration-200" >
+              Go <Icon glyph="external-small" />
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <header class="mb-10 flex items-baseline gap-4">
+          <h3 class="text-xs semibold tracking-[0.3em] uppercase text-zinc-500">
+            Browse by year
+          </h3>
+
+          <span class="flex-1 h-px bg-white/5"></span>
+
+          <span class="text-xs tracking-widest text-zinc-700 font-mono">
+            {FIRST_YEAR} — {currentYear}
+          </span>
+        </header>
+
+        <div class="space-y-14">
+          {decades.map(({ decade, years: dy }) => (
+            <div>
+              <p class="text-[11px] tracking-[0.28em] uppercase text-zinc-400 mb-5 font-mono">
+                {decade}
+              </p>
+
+              <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-3">
+                {dy.map((year) => (
+                  <a href={`/archive/${year}`} class="group relative rounded-3xl border border-white/10 bg-white/2 px-4 py-5 flex flex-col items-center gap-2 hover:border-white/20 hover:bg-white/6 transition-all duration-500 overflow-hidden" >
+
+                    <div aria-hidden="true" class="absolute inset-0 flex items-center justify-center text-5xl font-bold bg-linear-0 from-white/2 to-zinc-800 text-transparent bg-clip-text select-none font-sans tracking-tighter pointer-events-none group-hover:scale-110 transition-all duration-500">
+                      {year}
+                    </div>
+
+                    <span class="relative text-lg font-bold text-zinc-300 group-hover:text-white tracking-tight transition-colors duration-200 font-sans">
+                      {year}
+                    </span>
+
+                    <div class="relative grid grid-cols-6 gap-x-0.75 gap-y-0.75 w-14">
+                      {Array.from({ length: 12 }).map((_, i) => (
+                        <span
+                          class={`block rounded-full transition-all duration-200 ${
+                            year === currentYear && i >= new Date().getMonth()
+                              ? "w-1.25 h-1.25 bg-white/8"
+                              : "w-1.25 h-1.25 bg-zinc-700 group-hover:bg-zinc-300"
+                          }`}
+                        />
+                      ))}
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    </div>
+  </section>
 </Layout>
+<script>
+  document.addEventListener('astro:page-load', () =>{
+    const yearSel  = document.getElementById("url-year")  as HTMLSelectElement
+    const monthSel = document.getElementById("url-month") as HTMLSelectElement
+    const daySel   = document.getElementById("url-day")   as HTMLSelectElement
+    const goLink   = document.getElementById("url-go")    as HTMLAnchorElement
+
+    function updateLink() {
+      const y = yearSel.value
+      const m = monthSel.value
+      const d = daySel.value
+      const path = ["/archive", y, m, m && d ? d : ""].filter(Boolean).join("/")
+      goLink.href = path
+    }
+
+    monthSel.addEventListener("change", () => {
+      if (!monthSel.value) daySel.value = ""
+      updateLink()
+    })
+    yearSel.addEventListener("change", updateLink)
+    daySel.addEventListener("change", updateLink)
+  });
+</script>
