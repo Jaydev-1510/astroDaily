@@ -1,5 +1,4 @@
 ---
-import { Image } from "astro:assets";
 import { database } from "@lib/database";
 import PreApodCard from "./preApodCard.astro";
 import Icon from "./icons.astro";
@@ -70,12 +69,19 @@ const shareMessage = encodeURIComponent(`${shareUrl}\nCheck out this amazing Ast
   <figure class="w-full relative group mb-24 animate-in fade-in zoom-in-95 duration-1000 delay-200 overflow-hidden" >
     <div aria-hidden="true" class="absolute inset-0 bg-white/5 blur-3xl rounded-2xl opacity-20 group-hover:opacity-30 transition-opacity" ></div>
     <div class="rounded-3xl md:rounded-[2.5rem] overflow-hidden">
-      <img width={500} height={800} loading="eager" src={placeholder} data-src={full} alt={Apod?.title || `NASA Astronomy Picture of the Day - ${Apod.date}`} class="relative w-full object-cover rounded-3xl transition-all ease-in-out duration-500 md:rounded-[2.5rem] border border-white/10 shadow-2xl shadow-black blur-xl scale-110"
-      onload="if (this.dataset.src && this.src !== this.dataset.src) {
-        const full = new Image();
-        full.onload = () => { this.src = this.dataset.src; this.classList.remove('blur-xl', 'scale-110'); };
-        full.src = this.dataset.src;
-      }"/>
+      {Apod?.media_type === "video" ?
+        (
+          <video src={Apod.url} title={Apod?.title || "NASA APOD Video"} controls autoplay muted loop playsinline class="relative w-full aspect-video object-cover rounded-3xl md:rounded-[2.5rem] border border-white/10 shadow-2xl shadow-black" />
+        ) : (
+        <img 
+          width={500} height={800} loading="eager" src={placeholder} data-src={full} alt={Apod?.title || `NASA Astronomy Picture of the Day - ${Apod.date}`} class="relative w-full object-cover rounded-3xl transition-all ease-in-out duration-500 md:rounded-[2.5rem] border border-white/10 shadow-2xl shadow-black blur-xl scale-110"
+          onload="if (this.dataset.src && this.src !== this.dataset.src) {
+            const full = new Image();
+            full.onload = () => { this.src = this.dataset.src; this.classList.remove('blur-xl', 'scale-110'); };
+            full.src = this.dataset.src;
+          }"
+        />
+      )}
     </div>
     <figcaption class="absolute md:bottom-6 md:right-8 bottom-3 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex gap-1" >
       <p class="text-[10px] text-right tracking-widest uppercase text-white/50 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10" >
@@ -195,7 +201,7 @@ const shareMessage = encodeURIComponent(`${shareUrl}\nCheck out this amazing Ast
     }
   </nav>
 </section>
-<script type="application/ld+json" set:html={JSON.stringify({
+<script is:inline type="application/ld+json" set:html={JSON.stringify({
   "@context": "https://schema.org",
   "@type": "Article",
   headline: Apod?.title,
