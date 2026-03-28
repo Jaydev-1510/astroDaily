@@ -21,13 +21,13 @@ const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov
 <Layout title="Archive | astroDaily">
   <section class="relative px-6 pt-32">
     <header class="mb-20 text-center">
-      <h1 class="font-sans font-bold text-8xl md:text-[12rem] tracking-tighter absolute left-1/2 -translate-x-1/2 top-0 select-none text-center bg-linear-0 from-black to-zinc-500 text-transparent bg-clip-text duration-700 hover:to-zinc-200 transition-colors whitespace-nowrap pointer-events-none" >
+      <h1 class="font-bold text-8xl md:text-[12rem] tracking-tighter absolute left-1/2 -translate-x-1/2 top-0 select-none text-center bg-linear-0 from-black to-zinc-500 text-transparent bg-clip-text duration-700 hover:to-zinc-200 transition-colors whitespace-nowrap pointer-events-none" >
         Archive
       </h1>
-      <h2 class="relative text-4xl md:text-6xl text-shadow-black font-bold text-zinc-100 tracking-tight font-sans" >
+      <h2 class="relative text-4xl md:text-6xl text-shadow-black font-bold text-zinc-100 tracking-tight" >
         {currentYear - FIRST_YEAR + 1} years of the cosmos
       </h2>
-      <h3 class="text-zinc-400 relative text-[12px] md:text-[14px] text-shadow-black font-bold tracking-widest uppercase font-sans mt-2" >
+      <h3 class="text-zinc-400 relative text-[12px] md:text-[14px] text-shadow-black font-bold tracking-widest uppercase mt-2" >
         One picture at a time.
       </h3>
     </header>
@@ -53,7 +53,7 @@ const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov
             <form action="/archive/search" method="get" class="relative" >
               <Icon glyph="magnifying-glass" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 pointer-events-none z-10 transition-colors duration-300 group-focus-within:text-zinc-400" />
               <div class="absolute -inset-px rounded-2xl bg-linear-to-r from-zinc-700 via-zinc-500 to-zinc-700 opacity-0 transition-opacity duration-500 group-focus-within:opacity-100 blur-sm pointer-events-none"></div>
-              <input type="search" name="q" placeholder="nebula, aurora, black hole…" autocomplete="off" class="w-full bg-zinc-900/80 border border-white/8 rounded-2xl pl-11 pr-14 py-3.5 text-zinc-300 placeholder-zinc-600 font-sans text-sm tracking-wide focus:outline-none focus:border-zinc-600 transition-colors duration-300 backdrop-blur-sm" />
+              <input type="search" name="q" placeholder="nebula, aurora, black hole…" autocomplete="off" class="w-full bg-zinc-900/80 border border-white/8 rounded-2xl pl-11 pr-14 py-3.5 text-zinc-300 placeholder-zinc-600 text-sm tracking-wide focus:outline-none focus:border-zinc-600 transition-colors duration-300 backdrop-blur-sm" />
 
               <button type="submit" aria-label="Search" class="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-xl bg-white/5 border border-white/8 hover:bg-white/10 hover:border-zinc-500 transition-all duration-200 flex items-center justify-center text-zinc-400 hover:text-zinc-200" >
                 <Icon glyph="arrow-right" />
@@ -212,11 +212,11 @@ const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov
                 {dy.map((year) => (
                   <a href={`/archive/${year}`} class="group relative rounded-3xl border border-white/10 bg-white/2 px-4 py-5 flex flex-col items-center gap-2 hover:border-white/20 hover:bg-white/6 transition-all duration-500 overflow-hidden" >
 
-                    <div aria-hidden="true" class="absolute inset-0 flex items-center justify-center text-5xl font-bold bg-linear-0 from-white/2 to-zinc-800 text-transparent bg-clip-text select-none font-sans tracking-tighter pointer-events-none group-hover:scale-110 transition-all duration-500">
+                    <div aria-hidden="true" class="absolute inset-0 flex items-center justify-center text-5xl font-bold bg-linear-0 from-white/2 to-zinc-800 text-transparent bg-clip-text select-none tracking-tighter pointer-events-none group-hover:scale-110 transition-all duration-500">
                       {year}
                     </div>
 
-                    <span class="relative text-lg font-bold text-zinc-300 group-hover:text-white tracking-tight transition-colors duration-200 font-sans">
+                    <span class="relative text-lg font-bold text-zinc-300 group-hover:text-white tracking-tight transition-colors duration-200">
                       {year}
                     </span>
 
