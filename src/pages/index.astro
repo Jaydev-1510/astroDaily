@@ -3,23 +3,26 @@ import Layout from "@layouts/base.astro";
 import Hero from "@components/heroSection.astro";
 import Featured from "@components/featuredSection.astro";
 import Past from "@components/pastSection.astro";
-import Gallery from "@components/preGallery.astro"
+import Gallery from "@components/preGallery.astro";
+import Archive from "@components/preArchive.astro";
 
 export const revalidate = 86400;
 ---
 
 <Layout title="astroDaily">
 
-    <!-- Hero section -->
-    <Hero />
+  <Hero />
+  <div aria-hidden="true" class="w-screen h-px bg-linear-to-r from-transparent via-white/10 to-transparent"></div>
 
-    <!-- Today's Astronomy Picture -->
-    <Featured />
+  <Featured />
+  <div aria-hidden="true" class="w-screen h-px bg-linear-to-r from-transparent via-white/10 to-transparent"></div>
 
-    <!-- Pictures from past -->
-    <Past />
+  <Past />
+  <div aria-hidden="true" class="w-screen h-px bg-linear-to-r from-transparent via-white/10 to-transparent"></div>
 
-    <!-- Gallery preview -->
-    <Gallery />
+  <Archive />
+  <div aria-hidden="true" class="w-screen h-px bg-linear-to-r from-transparent via-white/10 to-transparent"></div>
+
+  <Gallery />
 
 </Layout>
