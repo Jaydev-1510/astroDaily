@@ -15,9 +15,9 @@ const initialItems = rawItems?.filter((item) => item.url && /\.(jpg|jpeg|png|web
 ---
 
 <Layout title="Gallery | astroDaily">
-  <section class="pt-32 px-4 md:px-8 max-w-400 mx-auto">
+  <section class="md:pt-32 pt-18 px-4 md:px-8 max-w-400 mx-auto">
     <header class="mb-20 text-center">
-      <h1 class="font-bold text-8xl md:text-[12rem] tracking-tighter absolute left-1/2 -translate-x-1/2 top-20 select-none text-center bg-linear-0 from-black to-zinc-500 text-transparent bg-clip-text duration-700 hover:to-zinc-200 transition-colors whitespace-nowrap pointer-events-none" >
+      <h1 class="font-bold text-8xl md:text-[12rem] tracking-tighter absolute left-1/2 -translate-x-1/2 top-20 select-none text-center bg-linear-0 from-black to-zinc-500 text-transparent bg-clip-text duration-700 hover:to-zinc-200 transition-colors whitespace-nowrap" >
         Gallery
       </h1>
       <h2 class="text-zinc-400 relative text-[12px] md:text-[14px] text-shadow-black font-bold tracking-widest uppercase md:mt-10" >
@@ -25,7 +25,7 @@ const initialItems = rawItems?.filter((item) => item.url && /\.(jpg|jpeg|png|web
       </h2>
     </header>
 
-    <div id="gallery-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 px-10 items-start" >
+    <div id="gallery-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 px-5 items-start" >
       <div class="flex flex-col gap-6 masonry-col"></div>
       <div class="flex flex-col gap-6 masonry-col md:flex"></div>
       <div class="flex flex-col gap-6 masonry-col lg:flex"></div>
