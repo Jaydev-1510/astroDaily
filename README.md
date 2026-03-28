@@ -12,6 +12,10 @@ Please check out https://apod.NASA.gov
 
 [astroDaily](https://astro--daily.vercel.app/)
 
+# API endpoint
+The **best** version of NASA APOD API; endpoint at `/api/v1/apod`.
+Grab the documentaion **[here](docs/api.md)**
+
 # Tech Stack
 
 - ![Astro](https://img.shields.io/badge/Astro-000?style=for-the-badge&logo=astro)
@@ -26,10 +30,17 @@ Please check out https://apod.NASA.gov
 ```
 / astroDaily
 ├─ scripts/           # Scripts for CI actions
+├─ docs/              # Documentaion of API
 ├─ src/
 │   ├─ components/    # Reusable UI components
-│   ├─ pages/         # Routes & pages
+│   ├─ data/          # Version metadata
+│   ├─ icons/         # Geist iconset
 │   ├─ layouts/       # Page layouts
+│   ├─ lib/           # Types & reusable database
+│   ├─ pages/         # Routes & pages
+│     ├─ api/         # API routes
+│   ├─ styles/        # css styles
+│   ├─ types/         # Types
 ├─ public/            # Static assets
 ├─ .env               # Secrets and keys
 └─ astro.config.mjs
@@ -40,8 +51,8 @@ Please check out https://apod.NASA.gov
 - Clone the repo:
 
 ```bash
-git clone https://github.com/Hack-Club-APS/hackclubaps.git
-cd hackclubaps
+git clone https://github.com/jaydev-1510/astroDaily.git
+cd astroDaily
 ```
 
 - Install dependencies:
