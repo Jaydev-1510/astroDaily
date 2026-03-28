@@ -61,7 +61,7 @@ const [featured, ...sidebar] = recent ?? [];
 
     {featured && (
       <div class="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-5 mb-5">
-        <a href={`/apod`} class="group relative rounded-2xl md:rounded-3xl overflow-hidden border border-white/3 bg-zinc-900/40 min-h-105 md:min-h-130 flex flex-col justify-end hover:border-white/6 transition-all duration-500" >
+        <a href={`/apod`} class="group relative rounded-3xl overflow-hidden border border-white/3 bg-zinc-900/40 min-h-105 md:min-h-130 flex flex-col justify-end hover:border-white/6 transition-all duration-500" >
           {featured.url && (
             <div class="absolute inset-0">
               <img src={thumb(featured.hdurl ?? featured.url, 1200)} alt={featured.title ?? ""} class="w-full h-full object-cover opacity-60 group-hover:opacity-75 group-hover:scale-[1.02] transition-all duration-700 ease-out" loading="lazy" />
@@ -91,7 +91,7 @@ const [featured, ...sidebar] = recent ?? [];
                 <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-zinc-400 opacity-50"></span>
                 <span class="relative rounded-full h-1.5 w-1.5 bg-zinc-400/70"></span>
               </span>
-              <span class="font-mono text-[10px] tracking-[0.18em] uppercase text-zinc-400">Latest</span>
+              <span class="text-[10px] tracking-[0.18em] uppercase text-zinc-400">Latest</span>
             </span>
           </div>
         </a>
@@ -112,11 +112,11 @@ const [featured, ...sidebar] = recent ?? [];
                 <div class="absolute inset-0 bg-linear-to-r from-transparent to-zinc-900/60"></div>
               </div>
 
-              <div class="flex flex-col justify-center px-4 py-3 flex-1 min-w-0">
-                <p class="font-mono text-[9px] tracking-[0.2em] uppercase text-zinc-500 mb-1.5">
+              <div class="flex flex-col justify-center px-4 md:py-3 py-5 flex-1 min-w-0">
+                <p class="font-mono text-[10px] tracking-[0.2em] uppercase text-zinc-500 group-hover:text-zinc-400 transition-colors duration-200 mb-1.5">
                   {apod.date}
                 </p>
-                <p class="text-md text-zinc-300 font-bold leading-snug line-clamp-2 group-hover:text-white transition-colors duration-200">
+                <p class="text-md text-zinc-300 font-bold leading-snug md:line-clamp-2 line-clamp-1 group-hover:text-white transition-colors duration-200">
                   {apod.title}
                 </p>
               </div>
