@@ -30,6 +30,19 @@ const { data: anniversaries } = await database.rpc("get_apods_by_date", {
   d: Number(day),
 });
 
+const keywords = Apod.title
+  .split(" ")
+  .filter(w => w.length > 4)
+  .slice(0, 4)
+  .join(" | ")
+
+const { data: related } = await database
+  .from("APODs")
+  .select("date, title, url, media_type")
+  .textSearch("fts", keywords, { type: "websearch", config: "english" })
+  .neq("date", Apod.date)
+  .limit(10)
+
 anniversaries?.pop();
 const encodedSD = Apod.url ? encodeURIComponent(Apod.url) : "";
 const encodedHD = Apod.hdurl ? encodeURIComponent(Apod.hdurl) : "";
@@ -182,18 +195,43 @@ const shareMessage = encodeURIComponent(`${shareUrl}\nCheck out this amazing Ast
   </section>
 </article>
 
-<section aria-labelledby="anniversary-heading" class="w-full">
-  <header class="w-full flex items-baseline justify-center gap-4 mb-10 border-b border-white/5 pb-4" >
+<section aria-labelledby="anniversary-heading" class="w-full mb-20">
+  <header class="w-full flex items-baseline justify-center gap-4 pb-4" >
     <h2 id="anniversary-heading" class="text-3xl md:text-4xl lg:text-5xl font-bold text-zinc-200 tracking-tight text-center w-full" >
       Pictures from past on this day.
     </h2>
   </header>
-
+  <div aria-hidden="true" class="my-10 w-screen h-px bg-linear-to-r from-transparent via-white/10 to-transparent"></div>
   <nav aria-label="Past APOD archive for this date" class="flex items-center justify-center">
     {
       anniversaries && anniversaries.length > 0 ? (
         <div class="px-20 flex flex-row gap-6 items-center overflow-x-auto scrollbar-hidden snap-x snap-mandatory scroll-smooth">
           {anniversaries.map((item) => (
+            <PreApodCard Apod={item} classList="snap-center snap-always" />
+          ))}
+        </div>
+      ) : (
+        <div class="flex flex-col items-center justify-center py-40 border border-dashed border-white/10 rounded-3xl">
+          <p class="text-sm tracking-widest uppercase text-zinc-600">
+            No cosmic data found for this period
+          </p>
+        </div>
+      )
+    }
+  </nav>
+</section>
+<section aria-labelledby="related-heading" class="w-full">
+  <header class="w-full flex items-baseline justify-center gap-4 pb-4" >
+    <h2 id="related-heading" class="text-3xl md:text-4xl lg:text-5xl font-bold text-zinc-200 tracking-tight text-center w-full" >
+      Related pictures.
+    </h2>
+  </header>
+  <div aria-hidden="true" class="my-10 w-screen h-px bg-linear-to-r from-transparent via-white/10 to-transparent"></div>
+  <nav aria-label="Past APOD archive for this date" class="flex items-center justify-center">
+    {
+      related && related.length > 0 ? (
+        <div class="px-20 flex flex-row gap-6 items-center overflow-x-auto scrollbar-hidden snap-x snap-mandatory scroll-smooth">
+          {related.map((item) => (
             <PreApodCard Apod={item} classList="snap-center snap-always" />
           ))}
         </div>
