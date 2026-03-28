@@ -2,8 +2,8 @@
 import Icon from "./icons.astro";
 
 const { Apod, classList } = Astro.props;
-const placeholder = `https://wsrv.nl/?url=${encodeURIComponent(Apod.url)}&w=20&output=webp&q=1&blur=3`;
-const full = `https://wsrv.nl/?url=${encodeURIComponent(Apod.url)}&w=500&output=webp&q=80`;
+const placeholder = `https://wsrv.nl/?url=${encodeURIComponent(Apod.media_type === 'image' ? Apod.url : Apod.thumbnail_url)}&w=20&output=webp&q=1&blur=3`;
+const full = `https://wsrv.nl/?url=${encodeURIComponent(Apod.media_type === 'image' ? Apod.url : Apod.thumbnail_url)}&w=500&output=webp&q=80`;
 const date = Apod.date;
 const year = date.split("-")[0];
 const month = date.split("-")[1];
@@ -37,7 +37,7 @@ const day = date.split("-")[2];
             {Apod?.date}
           </time>
 
-          <h3 class="font-sans text-xl font-medium tracking-tight text-white/90 line-clamp-1">
+          <h3 class="text-xl font-medium tracking-tight text-white/90 line-clamp-1">
             {Apod?.title || "Untitled Cosmic Event"}
           </h3>
         </div>
