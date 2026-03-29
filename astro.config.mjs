@@ -16,6 +16,7 @@ export default defineConfig({
     imageService: true,
     isr: {
       exclude: [
+        'archive/search',
         'random',
         /^\/api\/.+/
       ]

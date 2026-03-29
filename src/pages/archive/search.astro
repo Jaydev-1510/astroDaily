@@ -254,317 +254,319 @@ const pageTitle = titleParts.length
   initialQ, initialMedia, initialDecade, initialYear,
   initialMonth, initialDay, initialCopy, initialSort
 }}>
-  const LIMIT = 18
-
-  const filters = {
-    q: initialQ,
-    media_type: initialMedia,
-    decade: initialDecade,
-    year: initialYear,
-    month: initialMonth,
-    day: initialDay,
-    copyright: initialCopy,
-    sort: initialSort || "desc",
-  }
-
-  let currentPage = 0
-  let totalCount  = 0
-  let isFetching  = false
-
-  const input = document.getElementById("search-input")
-  const spinner = document.getElementById("search-spinner")
-  const metaEl = document.getElementById("result-meta")
-  const browsePrompt = document.getElementById("browse-prompt")
-  const emptyState = document.getElementById("empty-state")
-  const grid = document.getElementById("results-grid")
-  const pagination = document.getElementById("pagination")
-  const loadMoreBtn = document.getElementById("load-more-btn")
-  const loadMoreSpinner = document.getElementById("load-more-spinner")
-  const loadMoreLabel = document.getElementById("load-more-label")
-  const filterToggle = document.getElementById("filter-toggle")
-  const filterBody = document.getElementById("filter-body")
-  const toggleChevron = document.getElementById("toggle-chevron")
-  const activeChips = document.getElementById("active-chips")
-  const clearAllBtn = document.getElementById("clear-all-btn")
-  const yearSelect = document.getElementById("year-select")
-  const monthSelect = document.getElementById("month-select")
-  const daySelect = document.getElementById("day-select")
-
-  filterToggle.addEventListener("click", () => {
-    const open = filterBody.classList.toggle("hidden") === false
-    filterToggle.setAttribute("aria-expanded", String(open))
-    toggleChevron.style.transform = open ? "rotate(180deg)" : ""
-  })
-
-  function initChips() {
-    document.querySelectorAll(".filter-chip").forEach((chip) => {
-      const group = chip.dataset.group
-      const value = chip.dataset.value
-      const radio = chip.querySelector("input[type=radio]")
-
-      if (filters[group] === value) chip.classList.add("active")
-
-      chip.addEventListener("click", () => {
-        document.querySelectorAll(`.filter-chip[data-group="${group}"]`)
-          .forEach(c => c.classList.remove("active"))
-        chip.classList.add("active")
-        radio.checked = true
-        filters[group] = value
-
-        if (group === "decade" && value) {
-          filters.year = ""
-          yearSelect.value = ""
-        }
-        if (group === "year") {
-          filters.decade = ""
-          document.querySelectorAll(`.filter-chip[data-group="decade"]`)
-            .forEach(c => c.classList.remove("active"))
-          document.querySelector(`.filter-chip[data-group="decade"][data-value=""]`)
-            ?.classList.add("active")
-        }
-
-        if (group === "month" && value) {
-          filters.decade = ""; filters.year = ""
-        }
-
-        commitFilters()
-      })
-    })
-  }
-
-  yearSelect.addEventListener("change", () => {
-    filters.year   = yearSelect.value
-    filters.decade = ""
-    document.querySelectorAll(`.filter-chip[data-group="decade"]`)
-      .forEach(c => c.classList.remove("active"))
-    document.querySelector(`.filter-chip[data-group="decade"][data-value=""]`)
-      ?.classList.add("active")
-    commitFilters()
-  })
-  monthSelect.addEventListener("change", () => {
-    filters.month = monthSelect.value
-    if (!monthSelect.value) filters.day = ""
-    commitFilters()
-  })
-  daySelect.addEventListener("change", () => {
-    filters.day = daySelect.value
-    commitFilters()
-  })
-
-  let debounceTimer
-  input.addEventListener("input", () => {
-    clearTimeout(debounceTimer)
-    filters.q = input.value.trim()
-    debounceTimer = setTimeout(commitFilters, 380)
-  })
-
-  clearAllBtn.addEventListener("click", (e) => {
-    e.stopPropagation()
-    Object.assign(filters, {
-      q: "", media_type: "", decade: "", year: "",
-      month: "", day: "", copyright: "", sort: "desc",
-    })
-    input.value = ""
-    yearSelect.value  = ""
-    monthSelect.value = ""
-    daySelect.value   = ""
-    document.querySelectorAll(".filter-chip").forEach(c => {
-      c.classList.remove("active")
-      if (c.dataset.value === "" || (c.dataset.group === "sort" && c.dataset.value === "desc")) {
-        c.classList.add("active")
-      }
-    })
-    commitFilters()
-  })
-
-  const FILTER_LABELS = {
-    media_type: { image: "Images", video: "Videos" },
-    decade: { "2020": "2020s", "2010": "2010s", "2000": "2000s", "1990": "1990s" },
-    copyright: { "true": "Copyrighted", "false": "Public domain" },
-    sort: { asc: "Oldest first" },
-  }
-  function updateSummaryChips() {
-    activeChips.innerHTML = ""
-    const active = []
-
-    if (filters.q) active.push({ key: "q", label: `"${filters.q}"` })
-    if (filters.media_type) active.push({ key: "media_type", label: FILTER_LABELS.media_type[filters.media_type] ?? filters.media_type })
-    if (filters.decade) active.push({ key: "decade", label: FILTER_LABELS.decade[filters.decade] ?? filters.decade })
-    if (filters.year) active.push({ key: "year", label: filters.year })
-    if (filters.month) active.push({ key: "month", label: filters.day ? `${filters.month}/${filters.day}` : `Month ${filters.month}` })
-    if (filters.copyright) active.push({ key: "copyright", label: FILTER_LABELS.copyright[filters.copyright] ?? filters.copyright })
-    if (filters.sort === "asc") active.push({ key: "sort", label: "Oldest first" })
-
-    active.forEach(({ key, label }) => {
-      const chip = document.createElement("span")
-      chip.className = "summary-chip"
-      chip.innerHTML = `${label} <button aria-label="Remove ${label}" data-key="${key}">×</button>`
-      chip.querySelector("button").addEventListener("click", (e) => {
-        e.stopPropagation()
-        const k = e.currentTarget.dataset.key
-        if (k === "month") { filters.month = ""; filters.day = ""; monthSelect.value = ""; daySelect.value = "" }
-        else if (k === "sort") filters.sort = "desc"
-        else filters[k] = ""
-        if (k === "q")     input.value = ""
-        if (k === "year")  yearSelect.value = ""
-        if (k === "decade") {
-          document.querySelectorAll(`.filter-chip[data-group="decade"]`)
-            .forEach(c => c.classList.remove("active"))
-          document.querySelector(`.filter-chip[data-group="decade"][data-value=""]`)?.classList.add("active")
-        }
-        commitFilters()
-      })
-      activeChips.appendChild(chip)
-    })
-
-    clearAllBtn.classList.toggle("hidden", active.length === 0)
-  }
-
-  function buildParams(extra = {}) {
-    const p = new URLSearchParams()
-    const all = { ...filters, ...extra }
-    if (all.q) p.set("q", all.q)
-    if (all.media_type) p.set("media_type", all.media_type)
-    if (all.decade) p.set("decade", all.decade)
-    if (all.year) p.set("year", all.year)
-    if (all.month) p.set("month", all.month)
-    if (all.day) p.set("day", all.day)
-    if (all.copyright) p.set("copyright", all.copyright)
-    if (all.sort && all.sort !== "desc") p.set("sort", all.sort)
-    return p
-  }
-
-  function syncUrl() {
-    const p = buildParams()
-    const url = new URL(window.location.href)
-    url.search = p.toString()
-    window.history.pushState({ ...filters }, "", url)
-  }
-
-  function hasActiveFilter() {
-    return !!(filters.q || filters.media_type || filters.decade ||
-              filters.year || filters.month || filters.copyright ||
-              filters.sort === "asc")
-  }
-
-  async function fetchCards(page, append = false) {
-    if (isFetching) return
-    isFetching = true
-
-    if (append) { loadMoreSpinner.classList.remove("hidden"); loadMoreLabel.textContent = "Loading…" }
-    else        { spinner.classList.remove("hidden") }
-
-    try {
-      const p = buildParams({ limit: LIMIT, page })
-      const res  = await fetch(`/api/search?${p}`)
-      const json = await res.json()
-      if (!res.ok) throw new Error(json.error ?? "Fetch failed")
-
-      totalCount = json.count ?? 0
-      if (!append) { grid.innerHTML = ""; currentPage = 0 }
-
-      injectCards(json.html ?? "", append)
-      updateMeta()
-      syncPagination()
-
-    } catch (err) {
-      console.error(err); setEmpty(true)
-    } finally {
-      isFetching = false
-      spinner.classList.add("hidden")
-      loadMoreSpinner.classList.add("hidden")
-      loadMoreLabel.textContent = "Load more"
+  document.addEventListener('astro:page-load', () =>{
+    const LIMIT = 18
+  
+    const filters = {
+      q: initialQ,
+      media_type: initialMedia,
+      decade: initialDecade,
+      year: initialYear,
+      month: initialMonth,
+      day: initialDay,
+      copyright: initialCopy,
+      sort: initialSort || "desc",
     }
-  }
-
-  function commitFilters() {
-    currentPage = 0
-    syncUrl()
+  
+    let currentPage = 0
+    let totalCount  = 0
+    let isFetching  = false
+  
+    const input = document.getElementById("search-input")
+    const spinner = document.getElementById("search-spinner")
+    const metaEl = document.getElementById("result-meta")
+    const browsePrompt = document.getElementById("browse-prompt")
+    const emptyState = document.getElementById("empty-state")
+    const grid = document.getElementById("results-grid")
+    const pagination = document.getElementById("pagination")
+    const loadMoreBtn = document.getElementById("load-more-btn")
+    const loadMoreSpinner = document.getElementById("load-more-spinner")
+    const loadMoreLabel = document.getElementById("load-more-label")
+    const filterToggle = document.getElementById("filter-toggle")
+    const filterBody = document.getElementById("filter-body")
+    const toggleChevron = document.getElementById("toggle-chevron")
+    const activeChips = document.getElementById("active-chips")
+    const clearAllBtn = document.getElementById("clear-all-btn")
+    const yearSelect = document.getElementById("year-select")
+    const monthSelect = document.getElementById("month-select")
+    const daySelect = document.getElementById("day-select")
+  
+    filterToggle.addEventListener("click", () => {
+      const open = filterBody.classList.toggle("hidden") === false
+      filterToggle.setAttribute("aria-expanded", String(open))
+      toggleChevron.style.transform = open ? "rotate(180deg)" : ""
+    })
+  
+    function initChips() {
+      document.querySelectorAll(".filter-chip").forEach((chip) => {
+        const group = chip.dataset.group
+        const value = chip.dataset.value
+        const radio = chip.querySelector("input[type=radio]")
+  
+        if (filters[group] === value) chip.classList.add("active")
+  
+        chip.addEventListener("click", () => {
+          document.querySelectorAll(`.filter-chip[data-group="${group}"]`)
+            .forEach(c => c.classList.remove("active"))
+          chip.classList.add("active")
+          radio.checked = true
+          filters[group] = value
+  
+          if (group === "decade" && value) {
+            filters.year = ""
+            yearSelect.value = ""
+          }
+          if (group === "year") {
+            filters.decade = ""
+            document.querySelectorAll(`.filter-chip[data-group="decade"]`)
+              .forEach(c => c.classList.remove("active"))
+            document.querySelector(`.filter-chip[data-group="decade"][data-value=""]`)
+              ?.classList.add("active")
+          }
+  
+          if (group === "month" && value) {
+            filters.decade = ""; filters.year = ""
+          }
+  
+          commitFilters()
+        })
+      })
+    }
+  
+    yearSelect.addEventListener("change", () => {
+      filters.year   = yearSelect.value
+      filters.decade = ""
+      document.querySelectorAll(`.filter-chip[data-group="decade"]`)
+        .forEach(c => c.classList.remove("active"))
+      document.querySelector(`.filter-chip[data-group="decade"][data-value=""]`)
+        ?.classList.add("active")
+      commitFilters()
+    })
+    monthSelect.addEventListener("change", () => {
+      filters.month = monthSelect.value
+      if (!monthSelect.value) filters.day = ""
+      commitFilters()
+    })
+    daySelect.addEventListener("change", () => {
+      filters.day = daySelect.value
+      commitFilters()
+    })
+  
+    let debounceTimer
+    input.addEventListener("input", () => {
+      clearTimeout(debounceTimer)
+      filters.q = input.value.trim()
+      debounceTimer = setTimeout(commitFilters, 380)
+    })
+  
+    clearAllBtn.addEventListener("click", (e) => {
+      e.stopPropagation()
+      Object.assign(filters, {
+        q: "", media_type: "", decade: "", year: "",
+        month: "", day: "", copyright: "", sort: "desc",
+      })
+      input.value = ""
+      yearSelect.value  = ""
+      monthSelect.value = ""
+      daySelect.value   = ""
+      document.querySelectorAll(".filter-chip").forEach(c => {
+        c.classList.remove("active")
+        if (c.dataset.value === "" || (c.dataset.group === "sort" && c.dataset.value === "desc")) {
+          c.classList.add("active")
+        }
+      })
+      commitFilters()
+    })
+  
+    const FILTER_LABELS = {
+      media_type: { image: "Images", video: "Videos" },
+      decade: { "2020": "2020s", "2010": "2010s", "2000": "2000s", "1990": "1990s" },
+      copyright: { "true": "Copyrighted", "false": "Public domain" },
+      sort: { asc: "Oldest first" },
+    }
+    function updateSummaryChips() {
+      activeChips.innerHTML = ""
+      const active = []
+  
+      if (filters.q) active.push({ key: "q", label: `"${filters.q}"` })
+      if (filters.media_type) active.push({ key: "media_type", label: FILTER_LABELS.media_type[filters.media_type] ?? filters.media_type })
+      if (filters.decade) active.push({ key: "decade", label: FILTER_LABELS.decade[filters.decade] ?? filters.decade })
+      if (filters.year) active.push({ key: "year", label: filters.year })
+      if (filters.month) active.push({ key: "month", label: filters.day ? `${filters.month}/${filters.day}` : `Month ${filters.month}` })
+      if (filters.copyright) active.push({ key: "copyright", label: FILTER_LABELS.copyright[filters.copyright] ?? filters.copyright })
+      if (filters.sort === "asc") active.push({ key: "sort", label: "Oldest first" })
+  
+      active.forEach(({ key, label }) => {
+        const chip = document.createElement("span")
+        chip.className = "summary-chip"
+        chip.innerHTML = `${label} <button aria-label="Remove ${label}" data-key="${key}">×</button>`
+        chip.querySelector("button").addEventListener("click", (e) => {
+          e.stopPropagation()
+          const k = e.currentTarget.dataset.key
+          if (k === "month") { filters.month = ""; filters.day = ""; monthSelect.value = ""; daySelect.value = "" }
+          else if (k === "sort") filters.sort = "desc"
+          else filters[k] = ""
+          if (k === "q")     input.value = ""
+          if (k === "year")  yearSelect.value = ""
+          if (k === "decade") {
+            document.querySelectorAll(`.filter-chip[data-group="decade"]`)
+              .forEach(c => c.classList.remove("active"))
+            document.querySelector(`.filter-chip[data-group="decade"][data-value=""]`)?.classList.add("active")
+          }
+          commitFilters()
+        })
+        activeChips.appendChild(chip)
+      })
+  
+      clearAllBtn.classList.toggle("hidden", active.length === 0)
+    }
+  
+    function buildParams(extra = {}) {
+      const p = new URLSearchParams()
+      const all = { ...filters, ...extra }
+      if (all.q) p.set("q", all.q)
+      if (all.media_type) p.set("media_type", all.media_type)
+      if (all.decade) p.set("decade", all.decade)
+      if (all.year) p.set("year", all.year)
+      if (all.month) p.set("month", all.month)
+      if (all.day) p.set("day", all.day)
+      if (all.copyright) p.set("copyright", all.copyright)
+      if (all.sort && all.sort !== "desc") p.set("sort", all.sort)
+      return p
+    }
+  
+    function syncUrl() {
+      const p = buildParams()
+      const url = new URL(window.location.href)
+      url.search = p.toString()
+      window.history.pushState({ ...filters }, "", url)
+    }
+  
+    function hasActiveFilter() {
+      return !!(filters.q || filters.media_type || filters.decade ||
+                filters.year || filters.month || filters.copyright ||
+                filters.sort === "asc")
+    }
+  
+    async function fetchCards(page, append = false) {
+      if (isFetching) return
+      isFetching = true
+  
+      if (append) { loadMoreSpinner.classList.remove("hidden"); loadMoreLabel.textContent = "Loading…" }
+      else        { spinner.classList.remove("hidden") }
+  
+      try {
+        const p = buildParams({ limit: LIMIT, page })
+        const res  = await fetch(`/api/search?${p}`)
+        const json = await res.json()
+        if (!res.ok) throw new Error(json.error ?? "Fetch failed")
+  
+        totalCount = json.count ?? 0
+        if (!append) { grid.innerHTML = ""; currentPage = 0 }
+  
+        injectCards(json.html ?? "", append)
+        updateMeta()
+        syncPagination()
+  
+      } catch (err) {
+        console.error(err); setEmpty(true)
+      } finally {
+        isFetching = false
+        spinner.classList.add("hidden")
+        loadMoreSpinner.classList.add("hidden")
+        loadMoreLabel.textContent = "Load more"
+      }
+    }
+  
+    function commitFilters() {
+      currentPage = 0
+      syncUrl()
+      updateSummaryChips()
+  
+      if (!hasActiveFilter()) { resetResults(); return }
+      fetchCards(0, false)
+    }
+  
+    function injectCards(html, append) {
+      browsePrompt.classList.add("hidden")
+      if (!html && !append) { setEmpty(true); return }
+      setEmpty(false)
+      const t = document.createElement("template")
+      t.innerHTML = html
+      Array.from(t.content.children).forEach((card, i) => {
+        card.classList.add("search-card-enter")
+        grid.appendChild(card)
+        setTimeout(() => card.classList.add("search-card-visible"), (i % LIMIT) * 40)
+      })
+    }
+  
+    function updateMeta() {
+      const parts = []
+      if (filters.q) parts.push(`"${filters.q}"`)
+      const count = totalCount.toLocaleString()
+      metaEl.textContent = `${count} result${totalCount !== 1 ? "s" : ""}${parts.length ? ` for ${parts.join(", ")}` : ""}`
+      metaEl.classList.remove("opacity-0"); metaEl.classList.add("opacity-100")
+    }
+  
+    function syncPagination() {
+      const hasMore = (currentPage + 1) * LIMIT < totalCount
+      pagination.classList.toggle("hidden", !hasMore)
+      pagination.classList.toggle("flex",    hasMore)
+    }
+  
+    function setEmpty(e) {
+      emptyState.classList.toggle("hidden", !e); emptyState.classList.toggle("flex", e)
+      grid.classList.toggle("hidden", e)
+    }
+  
+    function resetResults() {
+      grid.innerHTML = ""
+      browsePrompt.classList.remove("hidden")
+      emptyState.classList.add("hidden"); emptyState.classList.remove("flex")
+      grid.classList.remove("hidden")
+      pagination.classList.add("hidden"); pagination.classList.remove("flex")
+      metaEl.textContent = ""; metaEl.classList.add("opacity-0")
+    }
+  
+    loadMoreBtn.addEventListener("click", () => {
+      if (isFetching || !hasActiveFilter()) return
+      currentPage++
+      fetchCards(currentPage, true)
+    })
+  
+    window.addEventListener("popstate", (e) => {
+      const s = e.state ?? Object.fromEntries(new URL(window.location.href).searchParams)
+      Object.assign(filters, {
+        q:          s.q          ?? "",
+        media_type: s.media_type ?? "",
+        decade:     s.decade     ?? "",
+        year:       s.year       ?? "",
+        month:      s.month      ?? "",
+        day:        s.day        ?? "",
+        copyright:  s.copyright  ?? "",
+        sort:       s.sort       ?? "desc",
+      })
+      input.value       = filters.q
+      yearSelect.value  = filters.year
+      monthSelect.value = filters.month
+      daySelect.value   = filters.day
+      syncChipState()
+      updateSummaryChips()
+      if (hasActiveFilter()) fetchCards(0, false)
+      else resetResults()
+    })
+  
+    function syncChipState() {
+      document.querySelectorAll(".filter-chip").forEach(chip => {
+        const group = chip.dataset.group
+        const value = chip.dataset.value
+        chip.classList.toggle("active", filters[group] === value)
+      })
+    }
+  
+    initChips()
     updateSummaryChips()
-
-    if (!hasActiveFilter()) { resetResults(); return }
-    fetchCards(0, false)
-  }
-
-  function injectCards(html, append) {
-    browsePrompt.classList.add("hidden")
-    if (!html && !append) { setEmpty(true); return }
-    setEmpty(false)
-    const t = document.createElement("template")
-    t.innerHTML = html
-    Array.from(t.content.children).forEach((card, i) => {
-      card.classList.add("search-card-enter")
-      grid.appendChild(card)
-      setTimeout(() => card.classList.add("search-card-visible"), (i % LIMIT) * 40)
-    })
-  }
-
-  function updateMeta() {
-    const parts = []
-    if (filters.q) parts.push(`"${filters.q}"`)
-    const count = totalCount.toLocaleString()
-    metaEl.textContent = `${count} result${totalCount !== 1 ? "s" : ""}${parts.length ? ` for ${parts.join(", ")}` : ""}`
-    metaEl.classList.remove("opacity-0"); metaEl.classList.add("opacity-100")
-  }
-
-  function syncPagination() {
-    const hasMore = (currentPage + 1) * LIMIT < totalCount
-    pagination.classList.toggle("hidden", !hasMore)
-    pagination.classList.toggle("flex",    hasMore)
-  }
-
-  function setEmpty(e) {
-    emptyState.classList.toggle("hidden", !e); emptyState.classList.toggle("flex", e)
-    grid.classList.toggle("hidden", e)
-  }
-
-  function resetResults() {
-    grid.innerHTML = ""
-    browsePrompt.classList.remove("hidden")
-    emptyState.classList.add("hidden"); emptyState.classList.remove("flex")
-    grid.classList.remove("hidden")
-    pagination.classList.add("hidden"); pagination.classList.remove("flex")
-    metaEl.textContent = ""; metaEl.classList.add("opacity-0")
-  }
-
-  loadMoreBtn.addEventListener("click", () => {
-    if (isFetching || !hasActiveFilter()) return
-    currentPage++
-    fetchCards(currentPage, true)
-  })
-
-  window.addEventListener("popstate", (e) => {
-    const s = e.state ?? Object.fromEntries(new URL(window.location.href).searchParams)
-    Object.assign(filters, {
-      q:          s.q          ?? "",
-      media_type: s.media_type ?? "",
-      decade:     s.decade     ?? "",
-      year:       s.year       ?? "",
-      month:      s.month      ?? "",
-      day:        s.day        ?? "",
-      copyright:  s.copyright  ?? "",
-      sort:       s.sort       ?? "desc",
-    })
-    input.value       = filters.q
-    yearSelect.value  = filters.year
-    monthSelect.value = filters.month
-    daySelect.value   = filters.day
     syncChipState()
-    updateSummaryChips()
     if (hasActiveFilter()) fetchCards(0, false)
-    else resetResults()
-  })
-
-  function syncChipState() {
-    document.querySelectorAll(".filter-chip").forEach(chip => {
-      const group = chip.dataset.group
-      const value = chip.dataset.value
-      chip.classList.toggle("active", filters[group] === value)
-    })
-  }
-
-  initChips()
-  updateSummaryChips()
-  syncChipState()
-  if (hasActiveFilter()) fetchCards(0, false)
+  });
 </script>

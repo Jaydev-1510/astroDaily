@@ -1,6 +1,7 @@
 ---
 import { database } from "@lib/database";
 
+export const prerender = true;
 const { data } = await database
   .from("APODs")
   .select("date")
@@ -38,7 +39,7 @@ const latestDate: string = latestApod.date;
               <a href={href} aria-current={isActive ? "page" : undefined} title={title} class={`text-[11px] font-bold uppercase tracking-widest transition-colors duration-300 ${isActive ? "text-white" : "text-zinc-400 group-hover:text-white"}`}>
                 {label}
               </a>
-              <span class={`absolute left-0 h-px bg-zinc-500 transition-all duration-300 ${isActive ? "w-full" : "w-0 group-hover:w-full"}`} />
+              <span class={`absolute left-0 bottom-0 h-px bg-zinc-500 transition-all duration-300 ${isActive ? "w-full" : "w-0 group-hover:w-full"}`} />
             </li>
             );
         })}
